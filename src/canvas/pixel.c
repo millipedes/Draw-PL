@@ -9,19 +9,6 @@
 #include "include/pixel.h"
 
 /**
- * This function changes the dest pixel to the color of the src pixel.
- * @param  dest - The pixel whose color is changed.
- * @param   src - The pixel whose color is being changed to.
- * @return dest - The pixel with the changed color.
- */
-pixel change_color(pixel dest, pixel src) {
-  dest.r = src.r;
-  dest.g = src.g;
-  dest.b = src.b;
-  return dest;
-}
-
-/**
  * This function debugs a pixel.
  * @param the_pixel - The pixel to be debugged.
  * @return      N/a

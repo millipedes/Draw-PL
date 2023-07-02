@@ -14,7 +14,6 @@ typedef struct LINE_T {
 
 void debug_line(line the_line);
 canvas write_line_to_canvas(canvas the_canvas, line the_line);
-void brensenham_line_draw(line the_line);
-void free_line(line the_line);
+canvas bresenham_line_draw(canvas the_canvas, line the_line);
 
 #endif

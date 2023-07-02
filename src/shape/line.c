@@ -1,41 +1,73 @@
 #include "include/line.h"
 
-// void brensenham_line_draw(canvas the_canvas, line the_line) {
-//   double m = 0;
-//   int b = 0;
-//   // from parent, to child
-//   if(line.from.x - line.to.x != 0)
-//     m = ((double)(line.from.y - line.to.y)) 
-//       / ((double)(line.from.x - line.to.x));
-//   else
-//     m = parent->fx;
-//   b = parent->fy - m * parent->fx;
-//   int x_start = 0;
-//   int x_end = 0;
-//   if(parent->fx < child->fx) {
-//     x_start = parent->fx + (parent->radius * -cos(atan2((double)m, -1.0)));
-//     x_end = child->fx + (child->radius
-//         * cos(atan2((double)m, -1.0)));
-//   } else if(parent->fx > child->fx) {
-//     x_start = parent->fx + (parent->radius * cos(atan2((double)m, -1.0)));
-//     x_end = child->fx + (child->radius
-//         * -cos(atan2((double)m, -1.0)));
-//   }
-//   if(x_start > x_end) {
-//     int tmp = x_start;
-//     x_start = x_end;
-//     x_end = tmp;
-//   }
-//   if(x_start == x_end && parent->fy < child->fy)
-//     for(int j = parent->fy + parent->radius;
-//         j < child->fy - child->radius; j++)
-//       change_color(the_canvas->values[j][parent->fx], parent->color);
-//   else if(x_start == x_end && parent->fy > child->fy)
-//     for(int j = child->fy + child->radius;
-//         j < parent->fy - parent->radius; j++)
-//       change_color(the_canvas->values[j][parent->fx], parent->color);
-//   else
-//     for(int j = x_start; j <= x_end; j++)
-//       change_color(the_canvas->values[(int)(m * j + b)][j], parent->color);
-//   return the_canvas;
-// }
+void debug_line(line the_line) {
+  printf("[LINE] %d\n", the_line.thickness);
+  printf("[FROM]:\n");
+  debug_point(the_line.from);
+  printf("[TO]:\n");
+  debug_point(the_line.to);
+  debug_pixel(the_line.color);
+}
+
+canvas write_line_to_canvas(canvas the_canvas, line the_line) {
+  switch(the_line.style) {
+    case SOLID:
+      return bresenham_line_draw(the_canvas, the_line);
+    case DOTTED:
+      fprintf(stderr, "Dotted line not implemented yet\n");
+      return NULL;
+  }
+  return NULL;
+}
+
+canvas bresenham_line_draw(canvas the_canvas, line the_line) {
+  int dx = the_line.to.x - the_line.from.x;
+  int dy = the_line.to.y - the_line.from.y;
+  int x = the_line.from.x;
+  int y = the_line.from.y;
+
+  int x_inc = (dx > 0) ? 1 : -1;
+  int y_inc = (dy > 0) ? 1 : -1;
+
+  dx = abs(dx);
+  dy = abs(dy);
+
+  int two_dx = 2 * dx;
+  int two_dy = 2 * dy;
+
+  int error = 0;
+
+  if (dx >= dy) {
+    while (x != the_line.to.x) {
+      for (int i = 0; i < the_line.thickness; i++) {
+        for (int j = -the_line.thickness / 2; j <= the_line.thickness / 2;
+            j++) {
+          the_canvas->values[y + j][(int)x + i] = the_line.from.color;
+        }
+      }
+      x += x_inc;
+      error += two_dy;
+      if (error > dx) {
+        y += y_inc;
+        error -= two_dx;
+      }
+    }
+  } else {
+    while (y != the_line.to.y) {
+      for (int i = 0; i < the_line.thickness; i++) {
+        for (int j = -the_line.thickness / 2; j <= the_line.thickness / 2;
+            j++) {
+          the_canvas->values[y + j][(int)x + i] = the_line.from.color;
+        }
+      }
+      y += y_inc;
+      error += two_dx;
+      if (error > dy) {
+        x += x_inc;
+        error -= two_dy;
+      }
+    }
+  }
+
+  return the_canvas;
+}
