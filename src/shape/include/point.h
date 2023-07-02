@@ -15,8 +15,7 @@ typedef struct POINT_T {
 } point;
 
 void debug_point(point the_point);
-void write_point_to_canvas(canvas the_canvas, point the_point);
-void scaline_circle_algorithm(canvas the_canvas, point the_point);
-void free_point(point the_point);
+canvas write_point_to_canvas(canvas the_canvas, point the_point);
+canvas scaline_circle_algorithm(canvas the_canvas, point the_point);
 
 #endif

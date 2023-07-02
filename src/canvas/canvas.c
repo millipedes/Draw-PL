@@ -19,11 +19,11 @@ canvas init_canvas(int height, int width, int r, int g, int b) {
   canvas the_canvas = calloc(1, sizeof(struct CANVAS_T));
   the_canvas->height = height;
   the_canvas->width = width;
-  the_canvas->values = calloc(height, sizeof(struct PIXEL_T **));
+  the_canvas->values = calloc(height, sizeof(struct PIXEL_T *));
   for(int i = 0; i < height; i++) {
-    the_canvas->values[i] = calloc(width, sizeof(struct PIXEL_T *));
+    the_canvas->values[i] = calloc(width, sizeof(struct PIXEL_T));
     for(int j = 0; j < width; j++)
-      the_canvas->values[i][j] = init_pixel(r, g, b);
+      the_canvas->values[i][j] = (pixel){r, g, b};
   }
   return the_canvas;
 }
@@ -60,7 +60,8 @@ void write_canvas_ppm(canvas the_canvas, char * file_name) {
 
 void write_canvas_png(canvas the_canvas, char * file_name) {
   FILE * fp = fopen(file_name, "w");
-  png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL,
+      NULL, NULL);
   png_infop info_ptr = png_create_info_struct(png_ptr);
   png_init_io(png_ptr, fp);
   png_set_IHDR(png_ptr, info_ptr, the_canvas->width, the_canvas->height, 8,
@@ -70,9 +71,9 @@ void write_canvas_png(canvas the_canvas, char * file_name) {
   for (int i = 0; i < the_canvas->height; i++) {
     png_bytep row = calloc(the_canvas->width * 3, sizeof(png_byte));
     for(int j = 0; j < the_canvas->width; j++) {
-      row[3*j + 0] = (png_byte) the_canvas->values[i][j]->r;
-      row[3*j + 1] = (png_byte) the_canvas->values[i][j]->g;
-      row[3*j + 2] = (png_byte) the_canvas->values[i][j]->b;
+      row[3*j + 0] = (png_byte) the_canvas->values[i][j].r;
+      row[3*j + 1] = (png_byte) the_canvas->values[i][j].g;
+      row[3*j + 2] = (png_byte) the_canvas->values[i][j].b;
     }
     png_write_row(png_ptr, row);
     free(row);
@@ -93,9 +94,8 @@ void free_canvas(canvas the_canvas) {
   if(the_canvas) {
     if(the_canvas->values) {
       for(int i = 0; i < the_canvas->height; i++) {
-        for(int j = 0; j < the_canvas->width; j++)
-          free_pixel(the_canvas->values[i][j]);
-        free(the_canvas->values[i]);
+        if(the_canvas->values[i])
+          free(the_canvas->values[i]);
       }
       free(the_canvas->values);
     }

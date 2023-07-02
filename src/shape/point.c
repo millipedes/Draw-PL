@@ -7,18 +7,18 @@ void debug_point(point the_point) {
   debug_pixel(the_point.color);
 }
 
-void write_point_to_canvas(canvas the_canvas, point the_point) {
+canvas write_point_to_canvas(canvas the_canvas, point the_point) {
   switch(the_point.style) {
     case CIRCLE:
-      scaline_circle_algorithm(the_canvas, the_point);
-      break;
+      return scaline_circle_algorithm(the_canvas, the_point);
     case STAR:
       fprintf(stderr, "Star point style needs to be implemented\n");
-      break;
+      return NULL;
   }
+  return NULL;
 }
 
-void scaline_circle_algorithm(canvas the_canvas, point the_point) {
+canvas scaline_circle_algorithm(canvas the_canvas, point the_point) {
   int min_x = the_point.x - the_point.radius;
   int max_x = the_point.radius + the_point.x;
   int min_y = the_point.y - the_point.radius;
@@ -35,12 +35,8 @@ void scaline_circle_algorithm(canvas the_canvas, point the_point) {
     right_x = (right_x > max_x) ? max_x : right_x;
 
     for(int j = left_x; j <= right_x; j++) {
-      change_color(the_canvas->values[i][j], the_point.color);
+      the_canvas->values[i][j] = the_point.color;
     }
   }
-}
-
-void free_point(point the_point) {
-  if(the_point.color)
-    free_pixel(the_point.color);
+  return the_canvas;
 }
