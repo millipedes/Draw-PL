@@ -10,8 +10,10 @@ set(SRC_FILES
     ${SRC_DIR}/shape/point_style.c
 )
 
+set(TEST_DIR "${CMAKE_SOURCE_DIR}/tests")
+
 # Include directories
-include_directories(${SRC_DIR})
+include_directories(${SRC_DIR} ${TEST_DIR})
 
 # Add executable
 add_executable(draw_pl ${SRC_FILES} ${SRC_DIR}/main/main.c)
@@ -19,14 +21,18 @@ add_executable(draw_pl ${SRC_FILES} ${SRC_DIR}/main/main.c)
 # Link libraries
 find_package(PNG REQUIRED)
 find_package(Freetype REQUIRED)
-target_link_libraries(draw_pl PNG::PNG Freetype::Freetype)
+target_link_libraries(draw_pl 
+  PNG::PNG
+  Freetype::Freetype
+  m
+)
 
 # Set compiler flags for draw_pl target
 target_compile_options(draw_pl PRIVATE -Wall -Wextra -g)
 
 set(TEST_DIR "${CMAKE_SOURCE_DIR}/tests")
 set(TEST_FILES
-    ${TEST_DIR}/shape/point.c
+    ${TEST_DIR}/shape/point_test.c
 )
 
 # Add tests executable
@@ -36,4 +42,8 @@ add_executable(tests ${SRC_FILES} ${TEST_FILES} ${TEST_DIR}/main/main.c)
 target_compile_options(tests PRIVATE -Wall -Wextra -g)
 
 # Link libraries for tests
-target_link_libraries(tests PRIVATE PNG::PNG Freetype::Freetype)
+target_link_libraries(tests PRIVATE
+  PNG::PNG
+  Freetype::Freetype
+  m
+  )
