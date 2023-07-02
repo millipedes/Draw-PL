@@ -1,0 +1,85 @@
+@startuml
+
+package canvas {
+  class canvas {
+    {field} + values : pixel **
+    {field} + height : int
+    {field} + width : int
+  }
+
+  class pixel {
+    {field} + r : int
+    {field} + g : int
+    {field} + b : int
+  }
+}
+
+package shape {
+  class point {
+     {field} + x : double
+     {field} + y : double
+  }
+
+  class point_collection {
+     {field} + values : point *
+     {field} + qty_points : int
+    {method} + point * read_csv
+  }
+
+  class rectangle {
+    {field} + height : double
+    {field} + width : double
+    {field} + center : point
+  }
+
+  class ellipse {
+    {field} + semi_major : double
+    {field} + semi_minor : double
+    {field} + center_point : point
+  }
+
+  class line {
+    {field} + p1 : point
+    {field} + p2 : point
+  }
+
+  enum line_style {
+    {field} + SOLID
+    {field} + DOTTED
+  }
+
+  enum line_arrow {
+    {field} + NONE
+    {field} + SOLID
+  }
+}
+
+package language {
+  class ast {
+    {field} + symbol_name : char *
+    {field} + children : ast *
+    {field} + leaf : token
+    {field} + no_children : int
+  }
+
+  class token {
+    {field} + literal : char *
+    {field} + type : token_type
+  }
+
+  enum token_type {
+    {field} + ID
+    {field} + INTEGER
+    {field} + DOUBLE
+    {field} + PLUS
+    {field} + MINUS
+    {field} + DIV
+    {field} + MULT
+    {field} + LPAREN
+    {field} + RPAREN
+    {field} + LBRACKET
+    {field} + RBRACKET
+  }
+}
+
+@enduml
