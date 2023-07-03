@@ -8,6 +8,9 @@ set(SRC_FILES
     ${SRC_DIR}/canvas/pixel.c
     ${SRC_DIR}/shape/point.c
     ${SRC_DIR}/shape/point_style.c
+    ${SRC_DIR}/shape/line.c
+    ${SRC_DIR}/shape/line_style.c
+    ${SRC_DIR}/shape/rectangle.c
 )
 
 set(TEST_DIR "${CMAKE_SOURCE_DIR}/tests")
@@ -33,6 +36,8 @@ target_compile_options(draw_pl PRIVATE -Wall -Wextra -g)
 set(TEST_DIR "${CMAKE_SOURCE_DIR}/tests")
 set(TEST_FILES
     ${TEST_DIR}/shape/point_test.c
+    ${TEST_DIR}/shape/line_test.c
+    ${TEST_DIR}/shape/rectangle_test.c
 )
 
 # Add tests executable
