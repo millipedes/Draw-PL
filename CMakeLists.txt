@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(draw_pl)
+project(nc)
 
 # Source files
 set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
@@ -27,12 +27,12 @@ include_directories(
 )
 
 # Add executable
-add_executable(draw_pl ${SRC_FILES} ${SRC_DIR}/main/main.c)
+add_executable(nc ${SRC_FILES} ${SRC_DIR}/main/main.c)
 
 # Link libraries
 find_package(PNG REQUIRED)
 find_package(Freetype REQUIRED)
-target_link_libraries(draw_pl PNG::PNG Freetype::Freetype m)
+target_link_libraries(nc PNG::PNG Freetype::Freetype m)
 
 # Bison
 find_package(BISON REQUIRED)
@@ -61,10 +61,10 @@ add_custom_target(flex_target
   DEPENDS ${FLEX_OUTPUT}
 )
 
-# add_dependencies(draw_pl bison_target flex_target)
+# add_dependencies(nc bison_target flex_target)
 
-# Set compiler flags for draw_pl target
-target_compile_options(draw_pl PRIVATE -Wall -Wextra -g)
+# Set compiler flags for nc target
+target_compile_options(nc PRIVATE -Wall -Wextra -g)
 
 # Tests
 set(TEST_FILES
