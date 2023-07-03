@@ -5,12 +5,9 @@
 #include "language/include/token.h"
 #include "parser.tab.h"
 
-extern int yylex();
-extern token yytoken;
 extern FILE * yyin;
 extern int yylex_destroy();
 extern ast head;
-extern YYSTYPE yylval;
 
 int main(void) {
   if(point_test())

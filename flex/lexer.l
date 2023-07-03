@@ -4,7 +4,22 @@
 #include "parser.tab.h"
 #include "language/include/ast.h"
 
-token yytoken = NULL;
+#define IS_UNNECESSARY_TOK(t) ((t == COMMA)       \
+                              || (t == LPAR)      \
+                              || (t == RPAR)      \
+                              || (t == LBRACE)    \
+                              || (t == RBRACE)    \
+                              || (t == CANVAS)    \
+                              || (t == COLOR)     \
+                              || (t == RECTANGLE) \
+                              || (t == LINE)      \
+                              || (t == FROM)      \
+                              || (t == TO)        \
+                              || (t == IN)        \
+                              || (t == FOR)       \
+                              || (t == RANGE)     \
+                              || (t == ELLIPSE)   \
+                              || (t == POINT))
 
 int allocate_ast(int category);
 void print_unmatched_quote(char * literal, int line_no);
@@ -25,39 +40,38 @@ void print_unmatched_quote(char * literal, int line_no);
 [ \t]
 
 #.*                    { return allocate_ast(COMMENT); }
-"False"                { return allocate_ast(FALSE); }
-"True"                 { return allocate_ast(TRUE); }
-"break"                { return allocate_ast(BREAK); }
-"for"                  { return allocate_ast(FOR); }
-"canvas"               { return allocate_ast(CANVAS); }
-"color"                { return allocate_ast(COLOR); }
-"rectangle"            { return allocate_ast(RECTANGLE); }
-"circle"               { return allocate_ast(CIRCLE); }
-"ellipse"              { return allocate_ast(ELLIPSE); }
-"square"               { return allocate_ast(SQUARE); }
-"line"                 { return allocate_ast(LINE); }
+"in"                   { return allocate_ast(IN); }
 "to"                   { return allocate_ast(TO); }
+"for"                  { return allocate_ast(FOR); }
+"true"                 { return allocate_ast(TRUE); }
+"line"                 { return allocate_ast(LINE); }
 "from"                 { return allocate_ast(FROM); }
-"point"                { return allocate_ast(POINT); }
-"range"                { return allocate_ast(RANGE); }
-"append"               { return allocate_ast(APPEND); }
-"north"                { return allocate_ast(NORTH); }
 "east"                 { return allocate_ast(EAST); }
-"south"                { return allocate_ast(SOUTH); }
 "west"                 { return allocate_ast(WEST); }
+"color"                { return allocate_ast(COLOR); }
+"false"                { return allocate_ast(FALSE); }
+"break"                { return allocate_ast(BREAK); }
+"point"                { return allocate_ast(POINT); }
+"south"                { return allocate_ast(SOUTH); }
 "write"                { return allocate_ast(WRITE); }
+"range"                { return allocate_ast(RANGE); }
+"north"                { return allocate_ast(NORTH); }
+"canvas"               { return allocate_ast(CANVAS); }
+"circle"               { return allocate_ast(CIRCLE); }
+"square"               { return allocate_ast(SQUARE); }
+"append"               { return allocate_ast(APPEND); }
+"ellipse"              { return allocate_ast(ELLIPSE); }
+"rectangle"            { return allocate_ast(RECTANGLE); }
 
 [A-Za-z_][A-Za-z0-9_]* { return allocate_ast(NAME); }
 
-[0-9][0-9_]+                     |
-[0-9][0-9_]+(e|E)[-+]?[0-9]*     { return allocate_ast(INTEGER); }
+[0-9_]+                     |
+[0-9_]+(e|E)[-+]?[0-9]*     { return allocate_ast(INTEGER); }
 
-[0-9][0-9_]*"."?                 |
-[0-9][0-9_]*"."?(e|E)[-+]?[0-9]* |
 "."[0-9]+                        |
 "."[0-9]+(e|E)[-+]?[0-9]*        |
-[0-9][0-9_]*"."[0-9]+            |
-[0-9][0-9_]*"."[0-9]+(e|E)[-+]?[0-9]* { return allocate_ast(DOUBLE); }
+[0-9]+"."[0-9]+            |
+[0-9]+"."[0-9]+(e|E)[-+]?[0-9]* { return allocate_ast(DOUBLE); }
 
 "("                             { return allocate_ast(LPAR); }
 ")"                             { return allocate_ast(RPAR); }
@@ -84,7 +98,10 @@ void print_unmatched_quote(char * literal, int line_no);
 %%
 
 int allocate_ast(int category) {
-  yylval.the_ast = init_ast(init_token(category, yytext, yylineno), category);
+  if(!IS_UNNECESSARY_TOK(category))
+    yylval.the_ast = init_ast(init_token(category, yytext, yylineno), category);
+  else
+    yylval.the_ast = NULL;
   return category;
 }
 

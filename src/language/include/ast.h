@@ -2,13 +2,14 @@
 #define AST_H
 
 #include "token.h"
+#include "internal_node_type.h"
 
 #define PRINT_C_N(c, n) for(int zyx = 0;  zyx < n; zyx++) printf("%c", c);
 
 typedef struct AST_T {
   struct AST_T ** children;
   token leaf;
-  int category;
+  internal_node_type category;
   int no_children;
 } * ast;
 

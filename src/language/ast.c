@@ -11,12 +11,12 @@ ast init_ast(token the_token, int category) {
 
 void debug_ast(ast head, int level) {
   PRINT_C_N(' ', level)
-  printf("[AST] %s %d\n", category_to_string(head->category),
-      head->no_children);
-  // if(head->leaf)
-  //   debug_token(head->leaf);
-  // else
-  //   printf("No Leaf\n");
+  if(head->leaf) {
+    printf("[AST] %s ", category_to_string(head->category));
+    printf("%s\n", head->leaf->literal);
+  } else {
+    printf("[AST] %s\n", internal_node_type_to_string(head->category));
+  }
   if(head->children) {
     for(int i = 0; i < head->no_children; i++) {
       debug_ast(head->children[i], level + 1);

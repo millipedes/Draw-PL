@@ -1,1 +1,11 @@
-canvas(color(255, 255, 255), "test_name.png", 1000, 1000) {}
+canvas(color(255, 255, 255), "test_name.png", 1000, 1000) {
+  rect = rectangle(1.0, 1.0, point(30.0, 30.0))
+  ell = ellipse(15.0, 17.0, point(1.0, 1.0))
+  the_point = point(10.0, 30.0)
+  x = line(from(ellipse(15.0, 17.0, point(1.0, 1.0))), \
+           to(rectangle(1.0, 1.0, point(30.0, 30.0))))
+  x = line(from(the_point), to(rect))
+  for i in range(8) {
+    x = line(from(the_point), to(rect))
+  }
+}

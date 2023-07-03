@@ -19,53 +19,148 @@ char * category_to_string(int category);
   ast the_ast;
 }
 
-%token <the_ast> STRING ENDMARKER NEWLINE COMMENT FALSE TRUE BREAK FOR CANVAS COLOR
-%token <the_ast> RECTANGLE CIRCLE ELLIPSE SQUARE LINE TO FROM POINT RANGE APPEND
-%token <the_ast> NORTH EAST SOUTH WEST WRITE NAME INTEGER DOUBLE LPAR RPAR LSQB RSQB
-%token <the_ast> COMMA PLUS MINUS STAR SLASH VBAR AMPER LESS GREATER EQUAL PERCENT
-%token <the_ast> LBRACE RBRACE EQEQUAL NOTEQUAL LESSEQUAL GREATEREQUAL DOUBLESLASH
-%token <the_ast> INTERNAL_NODE
+%token <the_ast> STRING ENDMARKER NEWLINE COMMENT FALSE TRUE BREAK FOR CANVAS
+%token <the_ast> COLOR RECTANGLE CIRCLE ELLIPSE SQUARE LINE TO FROM POINT RANGE
+%token <the_ast> APPEND NORTH EAST SOUTH WEST WRITE NAME INTEGER DOUBLE LPAR
+%token <the_ast> RPAR LSQB RSQB COMMA PLUS MINUS STAR SLASH VBAR AMPER LESS
+%token <the_ast> GREATER EQUAL PERCENT LBRACE RBRACE EQEQUAL NOTEQUAL LESSEQUAL
+%token <the_ast> GREATEREQUAL DOUBLESLASH IN
 
-%type <the_ast> canvas_declaration color_declaration
+%type <the_ast> canvas_declaration color_declaration star_NEWLINE_stmt statement
+%type <the_ast> shape_declaration rectangle_declaration shape point_declaration
+%type <the_ast> pick_NEWLINE_stmt ellipse_declaration line_declaration
+%type <the_ast> to_declaration from_declaration for_loop
 
 %%
 
 program
-  : canvas_declaration LBRACE RBRACE {
+  : canvas_declaration LBRACE star_NEWLINE_stmt RBRACE {
+    $1 = add_child($1, $3);
     head = $1;
-    free_ast($2);
-    free_ast($3);
     return ENDMARKER;
   }
   ;
 
 canvas_declaration
   : CANVAS LPAR color_declaration COMMA STRING COMMA INTEGER COMMA INTEGER RPAR {
-    $$ = init_ast(NULL, INTERNAL_NODE);
-    $$ = add_child($$, $1);
-    $$ = add_child($$, $2);
+    $$ = init_ast(NULL, IN_CANVAS_DECLARATION);
     $$ = add_child($$, $3);
-    $$ = add_child($$, $4);
     $$ = add_child($$, $5);
-    $$ = add_child($$, $6);
     $$ = add_child($$, $7);
-    $$ = add_child($$, $8);
     $$ = add_child($$, $9);
-    $$ = add_child($$, $10);
   }
   ;
 
 color_declaration
   : COLOR LPAR INTEGER COMMA INTEGER COMMA INTEGER RPAR {
-    $$ = init_ast(NULL, INTERNAL_NODE);
+    $$ = init_ast(NULL, IN_COLOR_DECLARATION);
+    $$ = add_child($$, $3);
+    $$ = add_child($$, $5);
+    $$ = add_child($$, $7);
+  }
+  ;
+
+star_NEWLINE_stmt
+  : pick_NEWLINE_stmt star_NEWLINE_stmt {
+    $$ = init_ast(NULL, IN_STAR_NEWLINE_STMT);
+    $$ = add_child($$, $1);
+    $$ = add_child($$, $2);
+  }
+  | NEWLINE
+  ;
+
+pick_NEWLINE_stmt
+  : statement {
+    $$ = init_ast(NULL, IN_PICK_NEWLINE_STMT);
+    $$ = add_child($$, $1);
+  }
+  | NEWLINE
+  ;
+
+statement
+  : shape_declaration
+  | for_loop
+  | COMMENT
+  ;
+
+for_loop
+  : FOR NAME IN RANGE LPAR INTEGER RPAR LBRACE star_NEWLINE_stmt RBRACE {
+    $$ = init_ast(NULL, IN_FOR_LOOP);
+    $$ = add_child($$, $2);
+    $$ = add_child($$, $6);
+    $$ = add_child($$, $9);
+  }
+  ;
+
+shape_declaration
+  : NAME EQUAL shape {
+    $$ = init_ast(NULL, IN_SHAPE_DECLARATION);
     $$ = add_child($$, $1);
     $$ = add_child($$, $2);
     $$ = add_child($$, $3);
-    $$ = add_child($$, $4);
+  }
+  ;
+
+shape
+  : rectangle_declaration
+  | ellipse_declaration
+  | point_declaration
+  | line_declaration
+  ;
+
+rectangle_declaration
+  : RECTANGLE LPAR DOUBLE COMMA DOUBLE COMMA point_declaration RPAR {
+    $$ = init_ast(NULL, IN_RECTANGLE_DECLARATION);
+    $$ = add_child($$, $3);
     $$ = add_child($$, $5);
-    $$ = add_child($$, $6);
     $$ = add_child($$, $7);
-    $$ = add_child($$, $8);
+  }
+  ;
+
+ellipse_declaration
+  : ELLIPSE LPAR DOUBLE COMMA DOUBLE COMMA point_declaration RPAR {
+    $$ = init_ast(NULL, IN_ELLIPSE_DECLARATION);
+    $$ = add_child($$, $3);
+    $$ = add_child($$, $5);
+    $$ = add_child($$, $7);
+  }
+  ;
+
+point_declaration
+  : POINT LPAR DOUBLE COMMA DOUBLE RPAR {
+    $$ = init_ast(NULL, IN_POINT_DECLARATION);
+    $$ = add_child($$, $3);
+    $$ = add_child($$, $5);
+  }
+  ;
+
+line_declaration
+  : LINE LPAR from_declaration COMMA to_declaration RPAR {
+    $$ = init_ast(NULL, IN_LINE_DECLARATION);
+    $$ = add_child($$, $3);
+    $$ = add_child($$, $5);
+  }
+  ;
+
+to_declaration
+  : TO LPAR shape RPAR {
+    $$ = init_ast(NULL, IN_TO_DECLARATION);
+    $$ = add_child($$, $3);
+  }
+  | TO LPAR NAME RPAR {
+    $$ = init_ast(NULL, IN_TO_DECLARATION);
+    $$ = add_child($$, $3);
+  }
+  ;
+
+from_declaration
+  : FROM LPAR shape RPAR {
+    $$ = init_ast(NULL, IN_FROM_DECLARATION);
+    $$ = add_child($$, $3);
+  }
+  | FROM LPAR NAME RPAR {
+    $$ = init_ast(NULL, IN_FROM_DECLARATION);
+    $$ = add_child($$, $3);
   }
   ;
 
@@ -128,7 +223,6 @@ char * category_to_string(int category) {
     case LESSEQUAL:     return "lessequal";
     case GREATEREQUAL:  return "greaterequal";
     case DOUBLESLASH:   return "doubleslash";
-    case INTERNAL_NODE: return "internal node";
   }
   return NULL;
 }
