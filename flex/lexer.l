@@ -84,9 +84,7 @@ void print_unmatched_quote(char * literal, int line_no);
 %%
 
 int allocate_ast(int category) {
-  yytoken = init_token(category, yytext, yylineno);
   yylval.the_ast = init_ast(init_token(category, yytext, yylineno), category);
-  free_ast(yylval.the_ast);
   return category;
 }
 

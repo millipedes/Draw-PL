@@ -9,6 +9,8 @@ extern int yylex();
 extern token yytoken;
 extern FILE * yyin;
 extern int yylex_destroy();
+extern ast head;
+extern YYSTYPE yylval;
 
 int main(void) {
   if(point_test())
@@ -27,14 +29,10 @@ int main(void) {
     printf("[ELLIPSE_TEST]: PASSED\n");
   else
     printf("[ELLIPSE_TEST]: FAILED\n");
-  yyin = fopen("../docs/sample_prog.dpl", "r");
-
-  int value = 0;
-  while((value = yylex()) != ENDMARKER) {
-    debug_token(yytoken);
-    free_token(yytoken);
-  }
-  free_token(yytoken);
+  yyin = fopen("../example_progs/example_one.dpl", "r");
+  yyparse();
+  debug_ast(head, 0);
+  free_ast(head);
 
   fclose(yyin);
   yylex_destroy();

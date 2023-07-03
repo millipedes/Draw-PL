@@ -1,0 +1,1 @@
+canvas(color(255, 255, 255), "test_name.png", 1000, 1000) {}
