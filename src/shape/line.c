@@ -37,10 +37,10 @@ canvas bresenham_line_draw(canvas the_canvas, line the_line) {
 
   int error = 0;
 
-  if (dx >= dy) {
-    while (x != the_line.to.x) {
-      for (int i = 0; i < the_line.thickness; i++) {
-        for (int j = -the_line.thickness / 2; j <= the_line.thickness / 2;
+  if(dx >= dy) {
+    while(x != the_line.to.x) {
+      for(int i = 0; i < the_line.thickness; i++) {
+        for(int j = -the_line.thickness / 2; j <= the_line.thickness / 2;
             j++) {
           the_canvas->values[y + j][(int)x + i] = the_line.from.color;
         }
@@ -53,16 +53,16 @@ canvas bresenham_line_draw(canvas the_canvas, line the_line) {
       }
     }
   } else {
-    while (y != the_line.to.y) {
-      for (int i = 0; i < the_line.thickness; i++) {
-        for (int j = -the_line.thickness / 2; j <= the_line.thickness / 2;
+    while(y != the_line.to.y) {
+      for(int i = 0; i < the_line.thickness; i++) {
+        for(int j = -the_line.thickness / 2; j <= the_line.thickness / 2;
             j++) {
           the_canvas->values[y + j][(int)x + i] = the_line.from.color;
         }
       }
       y += y_inc;
       error += two_dx;
-      if (error > dy) {
+      if(error > dy) {
         x += x_inc;
         error -= two_dy;
       }

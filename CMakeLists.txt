@@ -11,6 +11,7 @@ set(SRC_FILES
     ${SRC_DIR}/shape/line.c
     ${SRC_DIR}/shape/line_style.c
     ${SRC_DIR}/shape/rectangle.c
+    ${SRC_DIR}/shape/ellipse.c
 )
 
 set(TEST_DIR "${CMAKE_SOURCE_DIR}/tests")
@@ -38,6 +39,7 @@ set(TEST_FILES
     ${TEST_DIR}/shape/point_test.c
     ${TEST_DIR}/shape/line_test.c
     ${TEST_DIR}/shape/rectangle_test.c
+    ${TEST_DIR}/shape/ellipse_test.c
 )
 
 # Add tests executable
