@@ -5,8 +5,13 @@ you have ever been tired of click-resizing and moving sqaures etc. then no click
 might be the model building language for you.
 
 # :factory: Inputs and Outputs
-A text file (which I have deemed `.nc` files) which is consistent with the
-grammar below.
+The input to this program should be text files which are representative of a
+some 2D model (which I have deemed `.nc` files).  This can be anything which you
+can draw on a 2D surface using ellipses, rectangles, points, and lines.
+Additionally there is full text support. With these two things in mind, at least
+what I use it for is making graphical representations of complex data
+structures, representations of subdivisions of tasks, and representations of
+other state based phenomena such as DFA's.
 
 There are example programs in the `example_progs/` directory which kind of walks
 through why I made this language and its capabilities. Also the examples are all
