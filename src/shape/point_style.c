@@ -16,8 +16,8 @@
  */
 const char * point_style_to_string(point_style ps) {
   switch(ps) {
-    case CIRCLE: return "circle";
-    case STAR:   return "star";
+    case POINT_CIRCLE: return "circle";
+    case POINT_STAR:   return "star";
   }
   return NULL;
 }

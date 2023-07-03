@@ -29,9 +29,9 @@ void debug_point(point the_point) {
  */
 canvas write_point_to_canvas(canvas the_canvas, point the_point) {
   switch(the_point.style) {
-    case CIRCLE:
+    case POINT_CIRCLE:
       return scaline_circle_algorithm(the_canvas, the_point);
-    case STAR:
+    case POINT_STAR:
       fprintf(stderr, "Star point style needs to be implemented\n");
       return NULL;
   }

@@ -9,6 +9,8 @@ pkgs.mkShell {
   buildInputs = [
     pkgs.libpng
     pkgs.freetype
+    pkgs.flex
+    pkgs.bison
     cmake
     pkgs.gcc
   ];

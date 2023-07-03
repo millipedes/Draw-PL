@@ -17,7 +17,7 @@
 int ellipse_test(void) {
   canvas the_canvas = init_canvas(1000, 1000, MAX_COL, MAX_COL, MAX_COL);
   ellipse the_ellipse = {
-    (point){500.0, 500.0, CIRCLE, (pixel){0, 23, 42}, 15},
+    (point){500.0, 500.0, POINT_CIRCLE, (pixel){0, 23, 42}, 15},
     (pixel){0, 23, 42},
     500,
     300,

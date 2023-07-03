@@ -25,29 +25,29 @@ canvas draw_rectangle(canvas the_canvas, rectangle the_rect) {
 
   // Draw the four sides of the rectangle
   bresenham_line_draw(the_canvas, (line){
-      (point){x1, y1, CIRCLE, the_rect.color, 15},
-      (point){x2, y1, CIRCLE, the_rect.color, 15},
+      (point){x1, y1, POINT_CIRCLE, the_rect.color, 15},
+      (point){x2, y1, POINT_CIRCLE, the_rect.color, 15},
       SOLID,
       the_rect.color,
       the_rect.thickness
       });
   bresenham_line_draw(the_canvas, (line){
-      (point){x2, y1, CIRCLE, the_rect.color, 15},
-      (point){x2, y2, CIRCLE, the_rect.color, 15},
+      (point){x2, y1, POINT_CIRCLE, the_rect.color, 15},
+      (point){x2, y2, POINT_CIRCLE, the_rect.color, 15},
       SOLID,
       the_rect.color,
       the_rect.thickness
       });
   bresenham_line_draw(the_canvas, (line){
-      (point){x2, y2, CIRCLE, the_rect.color, 15},
-      (point){x1, y2, CIRCLE, the_rect.color, 15},
+      (point){x2, y2, POINT_CIRCLE, the_rect.color, 15},
+      (point){x1, y2, POINT_CIRCLE, the_rect.color, 15},
       SOLID,
       the_rect.color,
       the_rect.thickness
       });
   bresenham_line_draw(the_canvas, (line){
-      (point){x1, y2, CIRCLE, the_rect.color, 15},
-      (point){x1, y1, CIRCLE, the_rect.color, 15},
+      (point){x1, y2, POINT_CIRCLE, the_rect.color, 15},
+      (point){x1, y1, POINT_CIRCLE, the_rect.color, 15},
       SOLID,
       the_rect.color,
       the_rect.thickness

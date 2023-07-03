@@ -17,9 +17,6 @@ canvas(color(255, 255, 255), "test_name.png", 1000, 1000) {
     line(from(q), to(z[i - 1]))
   }
 
-  # Points From csv File
-  points = read_csv("my_csv_file.csv")
-
   # Write Everything
   write(rect)
   write(circ)

@@ -12,8 +12,8 @@
 #include <stdlib.h>
 
 typedef enum {
-  CIRCLE,
-  STAR
+  POINT_CIRCLE,
+  POINT_STAR
 } point_style;
 
 const char * point_style_to_string(point_style ps);
