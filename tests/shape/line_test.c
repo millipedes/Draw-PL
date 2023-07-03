@@ -1,5 +1,19 @@
+/**
+ * @file   line_test.c
+ * @brief  This file contains the test for drawing lines, could be improved, not
+ * really a good test.
+ * @author Matthew C. Lindeman
+ * @date   July 02, 2023
+ * @bug    None known
+ * @todo   Nothing
+ */
 #include "line_test.h"
 
+/**
+ * This function tests drawing a line onto a canvas.
+ * @param N/a
+ * @return  1
+ */
 int line_test(void) {
   canvas the_canvas = init_canvas(1000, 1000, MAX_COL, MAX_COL, MAX_COL);
   point to = {100.0, 500.0, CIRCLE, (pixel){0, 23, 42}, 300};

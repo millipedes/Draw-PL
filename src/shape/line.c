@@ -1,5 +1,19 @@
+/**
+ * @file   line.c
+ * @brief  This file contains the functions related to drawing lines onto a
+ * canvas.
+ * @author Matthew C. Lindeman
+ * @date   July 23, 2023
+ * @bug    None known
+ * @todo   Write the dotten line style implementation.
+ */
 #include "include/line.h"
 
+/**
+ * This function debugs a particular line.
+ * @param the_line - The line to be debugged.
+ * @return     N/a
+ */
 void debug_line(line the_line) {
   printf("[LINE] %d\n", the_line.thickness);
   printf("[FROM]:\n");
@@ -9,6 +23,12 @@ void debug_line(line the_line) {
   debug_pixel(the_line.color);
 }
 
+/**
+ * This function writes a line to a canvas.
+ * @param the_canvas - The canvas for the line to be written to.
+ * @param   the_line - The line to be written to the canvas.
+ * @return        .\ - The canvas with the correct syle of line written to it.
+ */
 canvas write_line_to_canvas(canvas the_canvas, line the_line) {
   switch(the_line.style) {
     case SOLID:
@@ -20,6 +40,13 @@ canvas write_line_to_canvas(canvas the_canvas, line the_line) {
   return NULL;
 }
 
+/**
+ * This function uses bresenham's line drawing algorithm to write a solid style
+ * line to a canvas.
+ * @param  the_canvas - The canvas for the line to be written to.
+ * @param    the_line - The line to be written to the canvas.
+ * @return the_canvas - The canvas with the line written to it.
+ */
 canvas bresenham_line_draw(canvas the_canvas, line the_line) {
   int dx = the_line.to.x - the_line.from.x;
   int dy = the_line.to.y - the_line.from.y;

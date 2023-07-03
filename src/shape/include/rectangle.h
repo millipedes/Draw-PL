@@ -1,3 +1,11 @@
+/**
+ * @file   rectangle.h
+ * @brief  This file contains the function definitions for rectangle.c.
+ * @date   July 02, 2023
+ * @bug    None known
+ * @todo   Make rectangle use draw_line instead of bresenham_line_draw when
+ * styles are more concrete.
+ */
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
@@ -11,7 +19,7 @@ typedef struct RECTANGLE_t {
   int thickness;
 } rectangle;
 
-canvas bresenham_rectangle_draw(canvas the_canvas, rectangle the_rect);
+canvas draw_rectangle(canvas the_canvas, rectangle the_rect);
 void debug_rectangle(int height, int width, point center);
 
 #endif

@@ -1,3 +1,11 @@
+/**
+ * @file   line.h.
+ * @brief  This file contains the function definitions for line.c.
+ * @author Matthew C. Lindeman
+ * @date   July 23, 2023
+ * @bug    None known
+ * @todo   Write the dotten line style implementation.
+ */
 #ifndef LINE_H
 #define LINE_H
 

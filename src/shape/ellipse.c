@@ -1,5 +1,19 @@
+/**
+ * @file   ellipse.c
+ * @brief  This file contains the functions related to drawing an ellipse.
+ * @author Matthew C. Lindeman
+ * @date   July 02, 2023
+ * @bug    None known
+ * @todo   Nothing
+ */
 #include "include/ellipse.h"
 
+/**
+ * This function draws an ellipse.
+ * @param  the_canvas - The canvas which the ellipse will be drawn to.
+ * @param the_ellipse - The ellipse which will be written to the canvas.
+ * @return the_canvas - The canvas with the ellipse written to it.
+ */
 canvas draw_ellipse(canvas the_canvas, ellipse the_ellipse) {
   int center_x = the_ellipse.center.x;
   int center_y = the_ellipse.center.y;
@@ -18,7 +32,8 @@ canvas draw_ellipse(canvas the_canvas, ellipse the_ellipse) {
   int dx = 0;
   int dy = two_rx2 * y;
 
-  draw_ellipse_points(the_canvas, the_ellipse, center_x, center_y, x, y);
+  the_canvas = draw_ellipse_points(the_canvas, the_ellipse, center_x, center_y,
+      x, y);
 
   // Region 1
   p = ry2 - (rx2 * radius_y) + (0.25 * rx2);
@@ -33,7 +48,8 @@ canvas draw_ellipse(canvas the_canvas, ellipse the_ellipse) {
       dy -= two_rx2;
       p += ry2 + dx - dy;
     }
-    draw_ellipse_points(the_canvas, the_ellipse, center_x, center_y, x, y);
+    the_canvas = draw_ellipse_points(the_canvas, the_ellipse, center_x,
+        center_y, x, y);
   }
 
   // Region 2
@@ -49,13 +65,24 @@ canvas draw_ellipse(canvas the_canvas, ellipse the_ellipse) {
       dx += two_ry2;
       p += rx2 - dy + dx;
     }
-    draw_ellipse_points(the_canvas, the_ellipse, center_x, center_y, x, y);
+    the_canvas = draw_ellipse_points(the_canvas, the_ellipse, center_x,
+        center_y, x, y);
   }
 
   return the_canvas;
 }
 
-void draw_ellipse_points(canvas the_canvas, ellipse the_ellipse, int center_x,
+/**
+ * This function is a helper function to draw_ellipse.
+ * @param  the_canvas - The canvas which the point will be written to.
+ * @param the_ellipse - The ellipse whoe points are being written to the canvas.
+ * @param    center_x - The center x point.
+ * @param    center_y - The center y point.
+ * @param           x - The x value of the point.
+ * @param           y - The y value of the point.
+ * @return the_canvas - The canvas which will have the points written to it.
+ */
+canvas draw_ellipse_points(canvas the_canvas, ellipse the_ellipse, int center_x,
     int center_y, int x, int y) {
   for(int i = -the_ellipse.thickness/2; i <= the_ellipse.thickness/2; i++) {
     for(int j = -the_ellipse.thickness/2; j <= the_ellipse.thickness/2; j++) {
@@ -69,4 +96,5 @@ void draw_ellipse_points(canvas the_canvas, ellipse the_ellipse, int center_x,
         = the_ellipse.color;
     }
   }
+  return the_canvas;
 }

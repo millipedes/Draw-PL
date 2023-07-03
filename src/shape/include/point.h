@@ -1,3 +1,11 @@
+/**
+ * @file   point.h
+ * @brief  This file contains the function definitions for point.c.
+ * @author Matthew C. Lindeman
+ * @date   July 02, 2023
+ * @bug    None known
+ * @todo   Nothing
+ */
 #ifndef POINT_H
 #define POINT_H
 

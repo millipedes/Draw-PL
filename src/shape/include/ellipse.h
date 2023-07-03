@@ -1,3 +1,11 @@
+/**
+ * @file   ellipse.h
+ * @brief  This file contains the function definitions related to an ellipse.
+ * @author Matthew C. Lindeman
+ * @date   July 02, 2023
+ * @bug    None known
+ * @todo   Nothing
+ */
 #ifndef ELLIPSE_H
 #define ELLIPSE_H
 
@@ -12,7 +20,7 @@ typedef struct ELLIPSE_T {
 } ellipse;
 
 canvas draw_ellipse(canvas the_canvas, ellipse the_ellipse);
-void draw_ellipse_points(canvas the_canvas, ellipse the_ellipse, int center_x,
+canvas draw_ellipse_points(canvas the_canvas, ellipse the_ellipse, int center_x,
     int center_y, int x, int y);
 
 #endif
