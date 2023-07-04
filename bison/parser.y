@@ -26,13 +26,17 @@ char * category_to_string(int category);
 %token <the_ast> APPEND NORTH EAST SOUTH WEST WRITE NAME INTEGER DOUBLE LPAR
 %token <the_ast> RPAR LSQB RSQB COMMA PLUS MINUS STAR SLASH VBAR AMPER LESS
 %token <the_ast> GREATER EQUAL PERCENT LBRACE RBRACE EQEQUAL NOTEQUAL LESSEQUAL
-%token <the_ast> GREATEREQUAL DOUBLESLASH IN IF
+%token <the_ast> GREATEREQUAL DOUBLESLASH IN IF HEIGHT WIDTH MAJOR_AXIS
+%token <the_ast> MINOR_AXIS THICKNESS
 
 %type <the_ast> canvas_declaration color_declaration star_NEWLINE_stmt statement
 %type <the_ast> shape_declaration rectangle_declaration shape point_declaration
 %type <the_ast> pick_NEWLINE_stmt ellipse_declaration line_declaration
 %type <the_ast> to_declaration from_declaration for_loop expression
-%type <the_ast> expression_assignment if_stmt
+%type <the_ast> expression_assignment if_stmt expression_list
+%type <the_ast> rectangle_parameter rectangle_parameters height_declaration
+%type <the_ast> width_declaration major_axis_declaration minor_axis_declaration
+%type <the_ast> ellipse_parameters ellipse_parameter thickness_declartaion
 
 %%
 
@@ -121,15 +125,36 @@ expression_assignment
   }
   ;
 
+expression_list
+  : expression
+  | expression_list COMMA expression {
+    $$ = init_ast(NULL, IN_EXPRESSION_LIST);
+    $$ = add_child($$, $1);
+    $$ = add_child($$, $3);
+  }
+  ;
+
 expression : DOUBLE
            | INTEGER
            | NAME
+           | STRING
            | NAME LSQB expression RSQB {
              $$ = init_ast(NULL, IN_EXPRESSION);
              $$ = add_child($$, $1);
              $$ = add_child($$, $2);
              $$ = add_child($$, $3);
              $$ = add_child($$, $4);
+           }
+           | LSQB RSQB {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+           }
+           | LSQB expression_list RSQB {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+             $$ = add_child($$, $3);
            }
            | TRUE
            | FALSE
@@ -215,20 +240,85 @@ shape
   ;
 
 rectangle_declaration
-  : RECTANGLE LPAR expression COMMA expression COMMA point_declaration RPAR {
+  : RECTANGLE LPAR rectangle_parameters RPAR {
     $$ = init_ast(NULL, IN_RECTANGLE_DECLARATION);
     $$ = add_child($$, $3);
-    $$ = add_child($$, $5);
-    $$ = add_child($$, $7);
+  }
+  ;
+
+rectangle_parameters
+  : rectangle_parameters COMMA rectangle_parameter {
+    $$ = init_ast(NULL, IN_RECTANGLE_PARAMETERS);
+    $$ = add_child($$, $1);
+    $$ = add_child($$, $3);
+  }
+  | rectangle_parameter
+  ;
+
+rectangle_parameter
+  : color_declaration
+  | point_declaration
+  | height_declaration
+  | width_declaration
+  | thickness_declartaion
+  ;
+
+height_declaration
+  : HEIGHT LPAR expression RPAR {
+    $$ = init_ast(NULL, IN_HEIGHT_DECLARATION);
+    $$ = add_child($$, $3);
+  }
+  ;
+
+width_declaration
+  : WIDTH LPAR expression RPAR {
+    $$ = init_ast(NULL, IN_WIDTH_DECLARATION);
+    $$ = add_child($$, $3);
   }
   ;
 
 ellipse_declaration
-  : ELLIPSE LPAR expression COMMA expression COMMA point_declaration RPAR {
+  : ELLIPSE LPAR ellipse_parameters RPAR {
     $$ = init_ast(NULL, IN_ELLIPSE_DECLARATION);
     $$ = add_child($$, $3);
-    $$ = add_child($$, $5);
-    $$ = add_child($$, $7);
+  }
+  ;
+
+ellipse_parameters
+  : ellipse_parameters COMMA ellipse_parameter {
+    $$ = init_ast(NULL, IN_ELLIPSE_PARAMETERS);
+    $$ = add_child($$, $1);
+    $$ = add_child($$, $3);
+  }
+  | ellipse_parameter
+  ;
+
+ellipse_parameter
+  : color_declaration
+  | point_declaration
+  | major_axis_declaration
+  | minor_axis_declaration
+  | thickness_declartaion
+  ;
+
+minor_axis_declaration
+  : MINOR_AXIS LPAR expression RPAR {
+    $$ = init_ast(NULL, IN_MAJOR_AXIS_DECLARATION);
+    $$ = add_child($$, $3);
+  }
+  ;
+
+major_axis_declaration
+  : MAJOR_AXIS LPAR expression RPAR {
+    $$ = init_ast(NULL, IN_MINOR_AXIS_DECLARATION);
+    $$ = add_child($$, $3);
+  }
+  ;
+
+thickness_declartaion
+  : THICKNESS LPAR expression RPAR {
+    $$ = init_ast(NULL, IN_THICKNESS_DECLARATION);
+    $$ = add_child($$, $3);
   }
   ;
 

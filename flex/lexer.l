@@ -4,22 +4,27 @@
 #include "parser.tab.h"
 #include "language/include/ast.h"
 
-#define IS_UNNECESSARY_TOK(t) ((t == COMMA)       \
-                              || (t == LPAR)      \
-                              || (t == RPAR)      \
-                              || (t == LBRACE)    \
-                              || (t == RBRACE)    \
-                              || (t == CANVAS)    \
-                              || (t == COLOR)     \
-                              || (t == RECTANGLE) \
-                              || (t == LINE)      \
-                              || (t == FROM)      \
-                              || (t == TO)        \
-                              || (t == IN)        \
-                              || (t == FOR)       \
-                              || (t == IF)        \
-                              || (t == RANGE)     \
-                              || (t == ELLIPSE)   \
+#define IS_UNNECESSARY_TOK(t) ((t == COMMA)        \
+                              || (t == LPAR)       \
+                              || (t == RPAR)       \
+                              || (t == LBRACE)     \
+                              || (t == RBRACE)     \
+                              || (t == CANVAS)     \
+                              || (t == COLOR)      \
+                              || (t == RECTANGLE)  \
+                              || (t == LINE)       \
+                              || (t == FROM)       \
+                              || (t == TO)         \
+                              || (t == IN)         \
+                              || (t == FOR)        \
+                              || (t == IF)         \
+                              || (t == RANGE)      \
+                              || (t == THICKNESS)  \
+                              || (t == MAJOR_AXIS) \
+                              || (t == MINOR_AXIS) \
+                              || (t == HEIGHT)     \
+                              || (t == WIDTH)      \
+                              || (t == ELLIPSE)    \
                               || (t == POINT))
 
 int allocate_ast(int category);
@@ -41,29 +46,34 @@ void print_unmatched_quote(char * literal, int line_no);
 [ \t]
 
 #.*                    { return allocate_ast(COMMENT); }
-"in"                   { return allocate_ast(IN); }
-"to"                   { return allocate_ast(TO); }
-"if"                   { return allocate_ast(IF); }
-"for"                  { return allocate_ast(FOR); }
-"true"                 { return allocate_ast(TRUE); }
-"line"                 { return allocate_ast(LINE); }
-"from"                 { return allocate_ast(FROM); }
-"east"                 { return allocate_ast(EAST); }
-"west"                 { return allocate_ast(WEST); }
-"color"                { return allocate_ast(COLOR); }
-"false"                { return allocate_ast(FALSE); }
+"append"               { return allocate_ast(APPEND); }
 "break"                { return allocate_ast(BREAK); }
+"color"                { return allocate_ast(COLOR); }
+"east"                 { return allocate_ast(EAST); }
+"for"                  { return allocate_ast(FOR); }
+"height"               { return allocate_ast(HEIGHT); }
+"width"                { return allocate_ast(WIDTH); }
+"if"                   { return allocate_ast(IF); }
+"in"                   { return allocate_ast(IN); }
+"line"                 { return allocate_ast(LINE); }
+"to"                   { return allocate_ast(TO); }
+"true"                 { return allocate_ast(TRUE); }
+"from"                 { return allocate_ast(FROM); }
+"west"                 { return allocate_ast(WEST); }
+"false"                { return allocate_ast(FALSE); }
 "point"                { return allocate_ast(POINT); }
 "south"                { return allocate_ast(SOUTH); }
 "write"                { return allocate_ast(WRITE); }
 "range"                { return allocate_ast(RANGE); }
 "north"                { return allocate_ast(NORTH); }
+"minor_axis"           { return allocate_ast(MINOR_AXIS); }
+"major_axis"           { return allocate_ast(MAJOR_AXIS); }
 "canvas"               { return allocate_ast(CANVAS); }
 "circle"               { return allocate_ast(CIRCLE); }
 "square"               { return allocate_ast(SQUARE); }
-"append"               { return allocate_ast(APPEND); }
 "ellipse"              { return allocate_ast(ELLIPSE); }
 "rectangle"            { return allocate_ast(RECTANGLE); }
+"tickness"             { return allocate_ast(THICKNESS); }
 
 [A-Za-z_][A-Za-z0-9_]* { return allocate_ast(NAME); }
 

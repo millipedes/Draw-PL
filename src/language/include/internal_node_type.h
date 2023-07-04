@@ -21,6 +21,14 @@ typedef enum {
   IN_EXPRESSION,
   IN_EXPRESSION_ASSIGNMENT,
   IN_IF_STMT,
+  IN_EXPRESSION_LIST,
+  IN_HEIGHT_DECLARATION,
+  IN_WIDTH_DECLARATION,
+  IN_RECTANGLE_PARAMETERS,
+  IN_ELLIPSE_PARAMETERS,
+  IN_MAJOR_AXIS_DECLARATION,
+  IN_MINOR_AXIS_DECLARATION,
+  IN_THICKNESS_DECLARATION,
 } internal_node_type;
 
 const char * internal_node_type_to_string(internal_node_type int_node_type);
