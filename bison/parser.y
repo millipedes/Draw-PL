@@ -208,7 +208,7 @@ shape
   ;
 
 rectangle_declaration
-  : RECTANGLE LPAR DOUBLE COMMA DOUBLE COMMA point_declaration RPAR {
+  : RECTANGLE LPAR expression COMMA expression COMMA point_declaration RPAR {
     $$ = init_ast(NULL, IN_RECTANGLE_DECLARATION);
     $$ = add_child($$, $3);
     $$ = add_child($$, $5);
@@ -217,7 +217,7 @@ rectangle_declaration
   ;
 
 ellipse_declaration
-  : ELLIPSE LPAR DOUBLE COMMA DOUBLE COMMA point_declaration RPAR {
+  : ELLIPSE LPAR expression COMMA expression COMMA point_declaration RPAR {
     $$ = init_ast(NULL, IN_ELLIPSE_DECLARATION);
     $$ = add_child($$, $3);
     $$ = add_child($$, $5);
@@ -226,7 +226,7 @@ ellipse_declaration
   ;
 
 point_declaration
-  : POINT LPAR DOUBLE COMMA DOUBLE RPAR {
+  : POINT LPAR expression COMMA expression RPAR {
     $$ = init_ast(NULL, IN_POINT_DECLARATION);
     $$ = add_child($$, $3);
     $$ = add_child($$, $5);
@@ -246,7 +246,7 @@ to_declaration
     $$ = init_ast(NULL, IN_TO_DECLARATION);
     $$ = add_child($$, $3);
   }
-  | TO LPAR NAME RPAR {
+  | TO LPAR expression RPAR {
     $$ = init_ast(NULL, IN_TO_DECLARATION);
     $$ = add_child($$, $3);
   }
@@ -257,7 +257,7 @@ from_declaration
     $$ = init_ast(NULL, IN_FROM_DECLARATION);
     $$ = add_child($$, $3);
   }
-  | FROM LPAR NAME RPAR {
+  | FROM LPAR expression RPAR {
     $$ = init_ast(NULL, IN_FROM_DECLARATION);
     $$ = add_child($$, $3);
   }

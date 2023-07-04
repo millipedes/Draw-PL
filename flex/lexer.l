@@ -17,6 +17,7 @@
                               || (t == TO)        \
                               || (t == IN)        \
                               || (t == FOR)       \
+                              || (t == IF)        \
                               || (t == RANGE)     \
                               || (t == ELLIPSE)   \
                               || (t == POINT))
