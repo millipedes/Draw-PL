@@ -17,6 +17,7 @@ set(SRC_FILES
     ${CMAKE_SOURCE_DIR}/flex/lexer.c
     ${SRC_DIR}/language/token.c
     ${SRC_DIR}/language/ast.c
+    ${SRC_DIR}/language/internal_node_type.c
 )
 
 # Include directories

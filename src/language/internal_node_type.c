@@ -16,6 +16,7 @@ const char * internal_node_type_to_string(internal_node_type int_node_type) {
     case IN_FROM_DECLARATION:      return "from decl";
     case IN_LINE_DECLARATION:      return "line decl";
     case IN_FOR_LOOP:              return "for loop";
+    case IN_EXPRESSION:            return "expression";
   }
   return NULL;
 }

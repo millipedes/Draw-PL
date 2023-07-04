@@ -11,6 +11,8 @@ char * category_to_string(int category);
 
 %debug
 
+%left PLUS MINUS STAR SLASH PERCENT
+
 %code requires {
   #include "language/include/ast.h"
 }
@@ -29,7 +31,7 @@ char * category_to_string(int category);
 %type <the_ast> canvas_declaration color_declaration star_NEWLINE_stmt statement
 %type <the_ast> shape_declaration rectangle_declaration shape point_declaration
 %type <the_ast> pick_NEWLINE_stmt ellipse_declaration line_declaration
-%type <the_ast> to_declaration from_declaration for_loop
+%type <the_ast> to_declaration from_declaration for_loop expression
 
 %%
 
@@ -42,7 +44,7 @@ program
   ;
 
 canvas_declaration
-  : CANVAS LPAR color_declaration COMMA STRING COMMA INTEGER COMMA INTEGER RPAR {
+  : CANVAS LPAR color_declaration COMMA STRING COMMA expression COMMA expression RPAR {
     $$ = init_ast(NULL, IN_CANVAS_DECLARATION);
     $$ = add_child($$, $3);
     $$ = add_child($$, $5);
@@ -52,7 +54,7 @@ canvas_declaration
   ;
 
 color_declaration
-  : COLOR LPAR INTEGER COMMA INTEGER COMMA INTEGER RPAR {
+  : COLOR LPAR expression COMMA expression COMMA expression RPAR {
     $$ = init_ast(NULL, IN_COLOR_DECLARATION);
     $$ = add_child($$, $3);
     $$ = add_child($$, $5);
@@ -84,13 +86,62 @@ statement
   ;
 
 for_loop
-  : FOR NAME IN RANGE LPAR INTEGER RPAR LBRACE star_NEWLINE_stmt RBRACE {
+  : FOR NAME IN RANGE LPAR expression RPAR LBRACE star_NEWLINE_stmt RBRACE {
     $$ = init_ast(NULL, IN_FOR_LOOP);
     $$ = add_child($$, $2);
     $$ = add_child($$, $6);
     $$ = add_child($$, $9);
   }
+  | FOR NAME IN RANGE LPAR expression COMMA expression RPAR LBRACE star_NEWLINE_stmt RBRACE {
+    $$ = init_ast(NULL, IN_FOR_LOOP);
+    $$ = add_child($$, $2);
+    $$ = add_child($$, $6);
+    $$ = add_child($$, $8);
+    $$ = add_child($$, $11);
+  }
   ;
+
+expression : DOUBLE
+           | INTEGER
+           | NAME
+           | TRUE
+           | FALSE
+           | expression PLUS expression {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+             $$ = add_child($$, $3);
+           }
+           | expression MINUS expression {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+             $$ = add_child($$, $3);
+           }
+           | expression STAR expression {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+             $$ = add_child($$, $3);
+           }
+           | expression SLASH expression {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+             $$ = add_child($$, $3);
+           }
+           | expression PERCENT expression {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+             $$ = add_child($$, $3);
+           }
+           | MINUS expression {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+           }
+           ;
 
 shape_declaration
   : NAME EQUAL shape {
