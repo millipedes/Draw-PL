@@ -124,6 +124,13 @@ expression_assignment
 expression : DOUBLE
            | INTEGER
            | NAME
+           | NAME LSQB expression RSQB {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+             $$ = add_child($$, $3);
+             $$ = add_child($$, $4);
+           }
            | TRUE
            | FALSE
            | expression PLUS expression {
