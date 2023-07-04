@@ -8,7 +8,7 @@ typedef enum {
   IN_COLOR_DECLARATION,
   IN_STAR_NEWLINE_STMT,
   IN_STATEMENT,
-  IN_SHAPE_DECLARATION,
+  IN_SHAPE_ASSIGNMENT,
   IN_RECTANGLE_DECLARATION,
   IN_SHAPE,
   IN_POINT_DECLARATION,
@@ -29,6 +29,7 @@ typedef enum {
   IN_MAJOR_AXIS_DECLARATION,
   IN_MINOR_AXIS_DECLARATION,
   IN_THICKNESS_DECLARATION,
+  IN_CANVAS_PARAMETERS,
 } internal_node_type;
 
 const char * internal_node_type_to_string(internal_node_type int_node_type);

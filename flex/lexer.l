@@ -73,7 +73,7 @@ void print_unmatched_quote(char * literal, int line_no);
 "square"               { return allocate_ast(SQUARE); }
 "ellipse"              { return allocate_ast(ELLIPSE); }
 "rectangle"            { return allocate_ast(RECTANGLE); }
-"tickness"             { return allocate_ast(THICKNESS); }
+"thickness"            { return allocate_ast(THICKNESS); }
 
 [A-Za-z_][A-Za-z0-9_]* { return allocate_ast(NAME); }
 

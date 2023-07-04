@@ -18,6 +18,8 @@ set(SRC_FILES
     ${SRC_DIR}/language/token.c
     ${SRC_DIR}/language/ast.c
     ${SRC_DIR}/language/internal_node_type.c
+    ${SRC_DIR}/language/symbol_table.c
+    ${SRC_DIR}/language/type.c
 )
 
 # Include directories

@@ -30,13 +30,14 @@ char * category_to_string(int category);
 %token <the_ast> MINOR_AXIS THICKNESS
 
 %type <the_ast> canvas_declaration color_declaration star_NEWLINE_stmt statement
-%type <the_ast> shape_declaration rectangle_declaration shape point_declaration
+%type <the_ast> shape_assignment rectangle_declaration shape point_declaration
 %type <the_ast> pick_NEWLINE_stmt ellipse_declaration line_declaration
 %type <the_ast> to_declaration from_declaration for_loop expression
 %type <the_ast> expression_assignment if_stmt expression_list
 %type <the_ast> rectangle_parameter rectangle_parameters height_declaration
 %type <the_ast> width_declaration major_axis_declaration minor_axis_declaration
 %type <the_ast> ellipse_parameters ellipse_parameter thickness_declartaion
+%type <the_ast> canvas_parameter canvas_parameters
 
 %%
 
@@ -49,13 +50,26 @@ program
   ;
 
 canvas_declaration
-  : CANVAS LPAR color_declaration COMMA STRING COMMA expression COMMA expression RPAR {
+  : CANVAS LPAR canvas_parameters RPAR {
     $$ = init_ast(NULL, IN_CANVAS_DECLARATION);
     $$ = add_child($$, $3);
-    $$ = add_child($$, $5);
-    $$ = add_child($$, $7);
-    $$ = add_child($$, $9);
   }
+  ;
+
+canvas_parameters
+  : canvas_parameters COMMA canvas_parameter {
+    $$ = init_ast(NULL, IN_CANVAS_PARAMETERS);
+    $$ = add_child($$, $1);
+    $$ = add_child($$, $3);
+  }
+  | canvas_parameter
+  ;
+
+canvas_parameter
+  : height_declaration
+  | width_declaration
+  | color_declaration
+  | STRING
   ;
 
 color_declaration
@@ -85,7 +99,7 @@ pick_NEWLINE_stmt
   ;
 
 statement
-  : shape_declaration
+  : shape_assignment
   | for_loop
   | COMMENT
   | expression_assignment
@@ -223,9 +237,9 @@ expression : DOUBLE
            }
            ;
 
-shape_declaration
+shape_assignment
   : NAME EQUAL shape {
-    $$ = init_ast(NULL, IN_SHAPE_DECLARATION);
+    $$ = init_ast(NULL, IN_SHAPE_ASSIGNMENT);
     $$ = add_child($$, $1);
     $$ = add_child($$, $2);
     $$ = add_child($$, $3);
