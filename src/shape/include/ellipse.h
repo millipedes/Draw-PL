@@ -22,5 +22,6 @@ typedef struct ELLIPSE_T {
 canvas draw_ellipse(canvas the_canvas, ellipse the_ellipse);
 canvas draw_ellipse_points(canvas the_canvas, ellipse the_ellipse, int center_x,
     int center_y, int x, int y);
+void debug_ellipse(ellipse the_ellipse);
 
 #endif

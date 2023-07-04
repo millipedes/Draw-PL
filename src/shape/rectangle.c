@@ -55,3 +55,10 @@ canvas draw_rectangle(canvas the_canvas, rectangle the_rect) {
 
   return the_canvas;
 }
+
+void debug_rectangle(rectangle the_rect) {
+  printf("[RECTANGLE]: (%d, %d, %d)\n", the_rect.height, the_rect.width,
+      the_rect.thickness);
+  debug_pixel(the_rect.color);
+  debug_point(the_rect.center);
+}

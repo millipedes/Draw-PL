@@ -98,3 +98,10 @@ canvas draw_ellipse_points(canvas the_canvas, ellipse the_ellipse, int center_x,
   }
   return the_canvas;
 }
+
+void debug_ellipse(ellipse the_ellipse) {
+  printf("[ELLIPSE]: (%d, %d, %d)\n", the_ellipse.major_axis,
+      the_ellipse.minor_axis, the_ellipse.thickness);
+  debug_point(the_ellipse.center);
+  debug_pixel(the_ellipse.color);
+}

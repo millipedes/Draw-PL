@@ -20,6 +20,7 @@ set(SRC_FILES
     ${SRC_DIR}/language/internal_node_type.c
     ${SRC_DIR}/language/symbol_table.c
     ${SRC_DIR}/language/type.c
+    ${SRC_DIR}/language/execute.c
 )
 
 # Include directories

@@ -20,6 +20,6 @@ typedef struct RECTANGLE_t {
 } rectangle;
 
 canvas draw_rectangle(canvas the_canvas, rectangle the_rect);
-void debug_rectangle(int height, int width, point center);
+void debug_rectangle(rectangle the_rect);
 
 #endif
