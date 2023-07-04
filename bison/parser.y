@@ -11,7 +11,7 @@ char * category_to_string(int category);
 
 %debug
 
-%left PLUS MINUS STAR SLASH PERCENT
+%left PLUS MINUS STAR SLASH PERCENT LESS GREATER LESSEQUAL GREATEREQUAL
 
 %code requires {
   #include "language/include/ast.h"
@@ -26,12 +26,13 @@ char * category_to_string(int category);
 %token <the_ast> APPEND NORTH EAST SOUTH WEST WRITE NAME INTEGER DOUBLE LPAR
 %token <the_ast> RPAR LSQB RSQB COMMA PLUS MINUS STAR SLASH VBAR AMPER LESS
 %token <the_ast> GREATER EQUAL PERCENT LBRACE RBRACE EQEQUAL NOTEQUAL LESSEQUAL
-%token <the_ast> GREATEREQUAL DOUBLESLASH IN
+%token <the_ast> GREATEREQUAL DOUBLESLASH IN IF
 
 %type <the_ast> canvas_declaration color_declaration star_NEWLINE_stmt statement
 %type <the_ast> shape_declaration rectangle_declaration shape point_declaration
 %type <the_ast> pick_NEWLINE_stmt ellipse_declaration line_declaration
 %type <the_ast> to_declaration from_declaration for_loop expression
+%type <the_ast> expression_assignment if_stmt
 
 %%
 
@@ -83,6 +84,16 @@ statement
   : shape_declaration
   | for_loop
   | COMMENT
+  | expression_assignment
+  | if_stmt
+  ;
+
+if_stmt
+  : IF LPAR expression RPAR LBRACE star_NEWLINE_stmt RBRACE {
+    $$ = init_ast(NULL, IN_IF_STMT);
+    $$ = add_child($$, $3);
+    $$ = add_child($$, $6);
+  }
   ;
 
 for_loop
@@ -98,6 +109,15 @@ for_loop
     $$ = add_child($$, $6);
     $$ = add_child($$, $8);
     $$ = add_child($$, $11);
+  }
+  ;
+
+expression_assignment
+  : NAME EQUAL expression {
+    $$ = init_ast(NULL, IN_EXPRESSION_ASSIGNMENT);
+    $$ = add_child($$, $1);
+    $$ = add_child($$, $2);
+    $$ = add_child($$, $3);
   }
   ;
 
@@ -136,9 +156,37 @@ expression : DOUBLE
              $$ = add_child($$, $2);
              $$ = add_child($$, $3);
            }
+           | expression LESS expression {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+             $$ = add_child($$, $3);
+           }
+           | expression GREATER expression {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+             $$ = add_child($$, $3);
+           }
+           | expression LESSEQUAL expression {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+             $$ = add_child($$, $3);
+           }
+           | expression GREATEREQUAL expression {
+             $$ = init_ast(NULL, IN_EXPRESSION);
+             $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+             $$ = add_child($$, $3);
+           }
            | MINUS expression {
              $$ = init_ast(NULL, IN_EXPRESSION);
              $$ = add_child($$, $1);
+             $$ = add_child($$, $2);
+           }
+           | LPAR expression RPAR {
+             $$ = init_ast(NULL, IN_EXPRESSION);
              $$ = add_child($$, $2);
            }
            ;

@@ -19,6 +19,8 @@ typedef enum {
   IN_LINE_DECLARATION,
   IN_FOR_LOOP,
   IN_EXPRESSION,
+  IN_EXPRESSION_ASSIGNMENT,
+  IN_IF_STMT,
 } internal_node_type;
 
 const char * internal_node_type_to_string(internal_node_type int_node_type);

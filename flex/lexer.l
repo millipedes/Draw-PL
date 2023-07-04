@@ -42,6 +42,7 @@ void print_unmatched_quote(char * literal, int line_no);
 #.*                    { return allocate_ast(COMMENT); }
 "in"                   { return allocate_ast(IN); }
 "to"                   { return allocate_ast(TO); }
+"if"                   { return allocate_ast(IF); }
 "for"                  { return allocate_ast(FOR); }
 "true"                 { return allocate_ast(TRUE); }
 "line"                 { return allocate_ast(LINE); }
