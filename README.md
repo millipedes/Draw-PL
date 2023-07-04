@@ -23,6 +23,9 @@ Ensure that you have:
   - bison
   - flex
   - libfreetype
+  - cmake
+  - gnumake
+  - gcc
 
 Installed on your system then:
 ```
