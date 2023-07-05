@@ -251,6 +251,7 @@ shape
   | ellipse_declaration
   | point_declaration
   | line_declaration
+  | color_declaration
   ;
 
 rectangle_declaration

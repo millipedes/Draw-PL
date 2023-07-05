@@ -42,21 +42,23 @@ canvas(                 \
     width(1.0),       \
     point(30.0, 30.0) \
   )
-  x = line(                \
-    from(                  \
-      ellipse(             \
-        major_axis(15.0),  \
-        minor_axis(17.0),  \
-        point(1.0, 1.0),   \
-        thickness(10 + 13) \
-      )                    \
-    ),                     \
-    to(                    \
-      rectangle(           \
-        width(1.0),        \
-        height(1.0),       \
-        point(30.0, 30.0)  \
-      )                    \
-    )                      \
+  x = line(                   \
+    from(                     \
+      ellipse(                \
+        major_axis(15.0),     \
+        minor_axis(17.0),     \
+        color(255, 255, 255), \
+        point(1.0, 1.0),      \
+        thickness(10 + 13)    \
+      )                       \
+    ),                        \
+    to(                       \
+      rectangle(              \
+        width(1.0),           \
+        height(1.0),          \
+        color(255, 255, 255), \
+        point(30.0, 30.0)     \
+      )                       \
+    )                         \
   )
 }

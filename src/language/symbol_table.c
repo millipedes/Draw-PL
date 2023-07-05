@@ -10,7 +10,16 @@ symbol_table init_symbol_table(void) {
 }
 
 symbol_table populate_symbol_table(ast head, symbol_table st) {
-  return NULL;
+  if(head) {
+    for(int i = 0; i < head->no_children; i ++) {
+      if(head->category == IN_EXPRESSION_ASSIGNMENT
+          || head->category == IN_SHAPE_ASSIGNMENT) {
+      }
+    }
+    return st;
+  } else {
+    return st;
+  }
 }
 
 symbol_table add_member(symbol_table st, symbol new_symbol) {
