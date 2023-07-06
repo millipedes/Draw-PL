@@ -4,6 +4,8 @@
 #include "shape/ellipse_test.h"
 #include "language/include/token.h"
 #include "parser.tab.h"
+#include "language/include/dot_gen.h"
+#include "language/include/symbol_table.h"
 
 extern FILE * yyin;
 extern int yylex_destroy();
@@ -26,11 +28,19 @@ int main(void) {
     printf("[ELLIPSE_TEST]: PASSED\n");
   else
     printf("[ELLIPSE_TEST]: FAILED\n");
-  yyin = fopen("../example_progs/example_one.dpl", "r");
+  yyin = fopen("../example_progs/symbol_tab.ncl", "r");
+  if(!yyin) {
+    printf("unable to open input file\n");
+    exit(1);
+  }
   yyparse();
   debug_ast(head, 0);
-  free_ast(head);
+  print_graph(head, "test.dot");
 
+  // symbol_table st = init_symbol_table();
+  // st = populate_symbol_table(head, st);
+
+  free_ast(head);
   fclose(yyin);
   yylex_destroy();
   return 0;

@@ -21,6 +21,7 @@ set(SRC_FILES
     ${SRC_DIR}/language/symbol_table.c
     ${SRC_DIR}/language/type.c
     ${SRC_DIR}/language/execute.c
+    ${SRC_DIR}/language/dot_gen.c
 )
 
 # Include directories

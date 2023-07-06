@@ -11,6 +11,7 @@ typedef enum {
   RECTANGLE,
   COLOR,
   POINT,
+  LINE,
   ELLIPSE,
   CANVAS,
 } ncl_type;

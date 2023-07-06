@@ -15,6 +15,12 @@
 
 #define PPM_HEADER "P3"
 
+#define DEFAULT_CAVNAS_HEIGHT 1000
+#define DEFAULT_CAVNAS_WIDTH  1000
+#define DEFAULT_CANVAS_R      255
+#define DEFAULT_CANVAS_G      255
+#define DEFAULT_CANVAS_B      255
+
 typedef struct CANVAS_T {
   pixel ** values;
   int height;

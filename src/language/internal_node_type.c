@@ -6,7 +6,7 @@ const char * internal_node_type_to_string(internal_node_type int_node_type) {
     case IN_COLOR_DECLARATION:      return "color decl";
     case IN_STAR_NEWLINE_STMT:      return "star newline stmt";
     case IN_STATEMENT:              return "statement";
-    case IN_SHAPE_ASSIGNMENT:       return "shape decl";
+    case IN_SHAPE_ASSIGNMENT:       return "shape assignment";
     case IN_RECTANGLE_DECLARATION:  return "rectangle decl";
     case IN_SHAPE:                  return "shape";
     case IN_POINT_DECLARATION:      return "point declaration";

@@ -9,6 +9,7 @@ const char * ncl_type_to_string(ncl_type the_ncl_type) {
     case RECTANGLE: return "rectangle";
     case COLOR:     return "color";
     case POINT:     return "point";
+    case LINE:      return "line";
     case ELLIPSE:   return "ellipse";
     case CANVAS:    return "canvas";
   }

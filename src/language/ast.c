@@ -6,6 +6,9 @@ ast init_ast(token the_token, int category) {
   the_ast->leaf = the_token;
   the_ast->category = category;
   the_ast->no_children = 0;
+  the_ast->tree_id = tree_id;
+  the_ast->line_no = yylineno;
+  tree_id++;
   return the_ast;
 }
 

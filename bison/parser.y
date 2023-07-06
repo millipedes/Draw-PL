@@ -4,6 +4,7 @@
 extern int yylex();
 extern char * yytext;
 ast head;
+int tree_id;
 
 int yyerror(char * s);
 char * category_to_string(int category);
@@ -11,7 +12,9 @@ char * category_to_string(int category);
 
 %debug
 
-%left PLUS MINUS STAR SLASH PERCENT LESS GREATER LESSEQUAL GREATEREQUAL
+%left PLUS MINUS
+%left STAR SLASH PERCENT
+%left LESS GREATER LESSEQUAL GREATEREQUAL
 
 %code requires {
   #include "language/include/ast.h"
@@ -43,6 +46,7 @@ char * category_to_string(int category);
 
 program
   : canvas_declaration LBRACE star_NEWLINE_stmt RBRACE {
+    tree_id = 0;
     $1 = add_child($1, $3);
     head = $1;
     return ENDMARKER;
