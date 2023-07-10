@@ -43,24 +43,34 @@ symbol execute_expression(ast head, result the_result) {
       }
     } else if(head->children[i]->leaf) {
       symbol value = {0};
+      size_t literal_len = 0;
       switch(head->children[i]->leaf->category) {
         case INTEGER:
+          the_result.current_type = NCL_INTEGER;
           value.the_int = atoi(head->children[i]->leaf->literal);
           return value;
         case DOUBLE:
+          the_result.current_type = NCL_DOUBLE;
           value.the_double = atof(head->children[i]->leaf->literal);
           return value;
         case TRUE:
+          the_result.current_type = NCL_BOOL;
           value.the_bool = 1;
           return value;
         case FALSE:
+          the_result.current_type = NCL_BOOL;
           value.the_bool = 0;
           return value;
-        // Name's are looked up further up tree
         case NAME:
+          the_result.current_type = NCL_LOOKUP;
+          literal_len = strnlen(head->children[i]->leaf->literal, MAX_NAME);
+          value.the_string = calloc(literal_len + 1, sizeof(char));
+          strncpy(value.the_string, head->children[i]->leaf->literal,
+              literal_len);
+          return value;
         case STRING:
-          size_t literal_len = strnlen(head->children[i]->leaf->literal,
-              MAX_NAME);
+          the_result.current_type = NCL_STRING;
+          literal_len = strnlen(head->children[i]->leaf->literal, MAX_NAME);
           value.the_string = calloc(literal_len + 1, sizeof(char));
           strncpy(value.the_string, head->children[i]->leaf->literal,
               literal_len);

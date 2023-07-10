@@ -19,7 +19,9 @@
 
 typedef struct RESULT_T {
   symbol current;
+  ncl_type current_type;
   symbol result;
+  ncl_type result_type;
 } result;
 
 // void execute(ast head);

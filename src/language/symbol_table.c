@@ -30,7 +30,7 @@ void debug_symbol_table(symbol_table st) {
          printf("`%s` :: %f\n", st->member_names[i],
              st->members[i].the_double);
          break;
-       case NCL_INT:
+       case NCL_INTEGER:
          printf("`%s` :: %d\n", st->member_names[i], st->members[i].the_int);
          break;
        case NCL_RECTANGLE:
@@ -57,6 +57,10 @@ void debug_symbol_table(symbol_table st) {
          printf("`%s`\n", st->member_names[i]);
          debug_canvas(st->members[i].the_canvas);
          break;
+       case NCL_LOOKUP:
+         fprintf(stderr, "[DEBUG_SYMBOL_TABLE]: Something went wrong\nExiting"
+             "\n");
+         exit(1);
     }
   }
 }

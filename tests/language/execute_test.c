@@ -2,8 +2,8 @@
 
 int execute_expression_test(void) {
   const char * input = "1 + 2 * 3 - - 4";
-  yy_scan_string(input);
-  yy_delete_buffer();
+  int buffer_value = yy_scan_string(input);
+  yy_delete_buffer(buffer_value);
   yylex_destroy();
   return 1;
 }
