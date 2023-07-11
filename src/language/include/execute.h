@@ -18,13 +18,11 @@
 // } symbol;
 
 typedef struct RESULT_T {
-  symbol current;
-  ncl_type current_type;
   symbol result;
   ncl_type result_type;
 } result;
 
 // void execute(ast head);
-symbol execute_expression(ast head, result the_result);
+result execute_expression(ast head, result the_result);
 
 #endif

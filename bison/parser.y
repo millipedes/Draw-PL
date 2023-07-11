@@ -51,6 +51,7 @@ program
     head = $1;
     return ENDMARKER;
   }
+  | expression
   ;
 
 canvas_declaration

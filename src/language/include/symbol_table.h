@@ -14,7 +14,7 @@ typedef union {
   char * the_string;
   int the_bool;
   double the_double;
-  int the_int;
+  int the_integer;
   // void * array;
   rectangle the_rect;
   pixel the_color;

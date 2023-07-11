@@ -35,9 +35,9 @@ int main(void) {
 
   // Language Test Start
   if(execute_expression_test())
-    printf("EXECUTE_TEST]: PASSED\n");
+    printf("[EXECUTE_TEST]: PASSED\n");
   else
-    printf("EXECUTE_TEST]: FAILED\n");
+    printf("[EXECUTE_TEST]: FAILED\n");
   // Language Test End
 
   // yyin = fopen("../example_progs/symbol_tab.ncl", "r");

@@ -77,6 +77,7 @@ set(TEST_FILES
     ${TEST_DIR}/shape/line_test.c
     ${TEST_DIR}/shape/rectangle_test.c
     ${TEST_DIR}/shape/ellipse_test.c
+    ${TEST_DIR}/language/execute_test.c
 )
 
 # Add tests executable

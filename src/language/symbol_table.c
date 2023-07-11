@@ -31,7 +31,8 @@ void debug_symbol_table(symbol_table st) {
              st->members[i].the_double);
          break;
        case NCL_INTEGER:
-         printf("`%s` :: %d\n", st->member_names[i], st->members[i].the_int);
+         printf("`%s` :: %d\n", st->member_names[i],
+             st->members[i].the_integer);
          break;
        case NCL_RECTANGLE:
          printf("`%s`\n", st->member_names[i]);

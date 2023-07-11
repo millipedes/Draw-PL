@@ -14,65 +14,163 @@
 //   st = populate_symbol_table(head, st);
 // }
 
-symbol execute_expression(ast head, result the_result) {
-  for(int i = 0; i < head->no_children; i++) {
-    if(!head->children[i]->leaf) {
-      switch(head->children[i]->category) {
-        case IN_EXPRESSION:
-          switch(head->children[1]->leaf->category) {
-            case PLUS:
-              break;
-            case MINUS:
-              break;
-            case STAR:
-              break;
-            case SLASH:
-              break;
-            case PERCENT:
-              break;
-          }
-          break;
-        case IN_EXPRESSION_LIST:
-          fprintf(stderr, "Not implemented yet\n");
-          exit(1);
-          break;
-        default:
-          fprintf(stderr, "[EXECUTE_EXPRESSION]: Something went terribly wrong"
-              "\n");
-          exit(1);
+result execute_expression(ast head, result value) {
+  if(head) {
+    if(!head->leaf) {
+      result the_result = {0};
+      for(int i = 0; i < head->no_children; i++) {
+        switch(head->category) {
+          case IN_EXPRESSION:
+            result left = execute_expression(head->children[0], (result){0});
+            result right = execute_expression(head->children[2], (result){0});
+            switch(head->children[1]->leaf->category) {
+              case PLUS:
+                if(left.result_type == right.result_type) {
+                  switch(left.result_type) {
+                    case NCL_STRING:
+                      fprintf(stderr, "[EXECUTE_EXPRESSION]: string not "
+                          "implemented\n");
+                      exit(1);
+                    case NCL_DOUBLE:
+                      the_result.result.the_double = left.result.the_double
+                        + right.result.the_double;
+                      the_result.result_type = NCL_DOUBLE;
+                      return the_result;
+                    case NCL_INTEGER:
+                      the_result.result.the_integer = left.result.the_integer
+                        + right.result.the_integer;
+                      the_result.result_type = NCL_INTEGER;
+                      return the_result;
+                    default:
+                      fprintf(stderr, "[EXECUTE_EXPRESSION]: %s addition not "
+                          "supported, exiting\n",
+                          ncl_type_to_string(left.result_type));
+                      exit(1);
+                  }
+                }
+                break;
+              case MINUS:
+                if(left.result_type == right.result_type) {
+                  switch(left.result_type) {
+                    case NCL_DOUBLE:
+                      the_result.result.the_double = left.result.the_double
+                        - right.result.the_double;
+                      the_result.result_type = NCL_DOUBLE;
+                      return the_result;
+                    case NCL_INTEGER:
+                      the_result.result.the_integer = left.result.the_integer
+                        - right.result.the_integer;
+                      the_result.result_type = NCL_INTEGER;
+                      return the_result;
+                    default:
+                      fprintf(stderr, "[EXECUTE_EXPRESSION]: %s subtraction not"
+                          " supported, exiting\n",
+                          ncl_type_to_string(left.result_type));
+                      exit(1);
+                  }
+                }
+                break;
+              case STAR:
+                if(left.result_type == right.result_type) {
+                  switch(left.result_type) {
+                    case NCL_DOUBLE:
+                      the_result.result.the_double = left.result.the_double
+                        * right.result.the_double;
+                      the_result.result_type = NCL_DOUBLE;
+                      return the_result;
+                    case NCL_INTEGER:
+                      the_result.result.the_integer = left.result.the_integer
+                        * right.result.the_integer;
+                      the_result.result_type = NCL_INTEGER;
+                      return the_result;
+                    default:
+                      fprintf(stderr, "[EXECUTE_EXPRESSION]: %s multiplication "
+                          "not supported, exiting\n",
+                          ncl_type_to_string(left.result_type));
+                      exit(1);
+                  }
+                }
+                break;
+              case SLASH:
+                if(left.result_type == right.result_type) {
+                  switch(left.result_type) {
+                    case NCL_DOUBLE:
+                      the_result.result.the_double = left.result.the_double
+                        / right.result.the_double;
+                      the_result.result_type = NCL_DOUBLE;
+                      return the_result;
+                    case NCL_INTEGER:
+                      the_result.result.the_integer = left.result.the_integer
+                        / right.result.the_integer;
+                      the_result.result_type = NCL_INTEGER;
+                      return the_result;
+                    default:
+                      fprintf(stderr, "[EXECUTE_EXPRESSION]: %s division not "
+                          "supported, exiting\n",
+                          ncl_type_to_string(left.result_type));
+                      exit(1);
+                  }
+                }
+                break;
+              case PERCENT:
+                if(left.result_type == right.result_type) {
+                  switch(left.result_type) {
+                    case NCL_INTEGER:
+                      the_result.result.the_integer = left.result.the_integer
+                        % right.result.the_integer;
+                      the_result.result_type = NCL_INTEGER;
+                      return the_result;
+                    default:
+                      fprintf(stderr, "[EXECUTE_EXPRESSION]: %s modulus not "
+                          "supported, exiting\n",
+                          ncl_type_to_string(left.result_type));
+                      exit(1);
+                  }
+                }
+                break;
+            }
+            break;
+          case IN_EXPRESSION_LIST:
+            fprintf(stderr, "Not implemented yet\n");
+            exit(1);
+            break;
+          default:
+            fprintf(stderr, "[EXECUTE_EXPRESSION]: Something went terribly wrong"
+                "\n");
+            exit(1);
+        }
       }
-    } else if(head->children[i]->leaf) {
-      symbol value = {0};
+    } else if(head->leaf) {
       size_t literal_len = 0;
-      switch(head->children[i]->leaf->category) {
+      switch(head->leaf->category) {
         case INTEGER:
-          the_result.current_type = NCL_INTEGER;
-          value.the_int = atoi(head->children[i]->leaf->literal);
+          value.result_type = NCL_INTEGER;
+          value.result.the_integer = atoi(head->leaf->literal);
           return value;
         case DOUBLE:
-          the_result.current_type = NCL_DOUBLE;
-          value.the_double = atof(head->children[i]->leaf->literal);
+          value.result_type = NCL_DOUBLE;
+          value.result.the_double = atof(head->leaf->literal);
           return value;
         case TRUE:
-          the_result.current_type = NCL_BOOL;
-          value.the_bool = 1;
+          value.result_type = NCL_BOOL;
+          value.result.the_bool = 1;
           return value;
         case FALSE:
-          the_result.current_type = NCL_BOOL;
-          value.the_bool = 0;
+          value.result_type = NCL_BOOL;
+          value.result.the_bool = 0;
           return value;
         case NAME:
-          the_result.current_type = NCL_LOOKUP;
-          literal_len = strnlen(head->children[i]->leaf->literal, MAX_NAME);
-          value.the_string = calloc(literal_len + 1, sizeof(char));
-          strncpy(value.the_string, head->children[i]->leaf->literal,
+          value.result_type = NCL_LOOKUP;
+          literal_len = strnlen(head->leaf->literal, MAX_NAME);
+          value.result.the_string = calloc(literal_len + 1, sizeof(char));
+          strncpy(value.result.the_string, head->leaf->literal,
               literal_len);
           return value;
         case STRING:
-          the_result.current_type = NCL_STRING;
-          literal_len = strnlen(head->children[i]->leaf->literal, MAX_NAME);
-          value.the_string = calloc(literal_len + 1, sizeof(char));
-          strncpy(value.the_string, head->children[i]->leaf->literal,
+          value.result_type = NCL_STRING;
+          literal_len = strnlen(head->leaf->literal, MAX_NAME);
+          value.result.the_string = calloc(literal_len + 1, sizeof(char));
+          strncpy(value.result.the_string, head->leaf->literal,
               literal_len);
           return value;
         default:
