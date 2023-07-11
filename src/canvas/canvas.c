@@ -16,14 +16,14 @@
  * @return the_canvas - The inited canvas.
  */
 canvas init_canvas(int height, int width, int r, int g, int b) {
-  canvas the_canvas = calloc(1, sizeof(struct CANVAS_T));
-  the_canvas->height = height;
-  the_canvas->width = width;
-  the_canvas->values = calloc(height, sizeof(struct PIXEL_T *));
+  canvas the_canvas = {0};
+  the_canvas.height = height;
+  the_canvas.width = width;
+  the_canvas.values = calloc(height, sizeof(struct PIXEL_T *));
   for(int i = 0; i < height; i++) {
-    the_canvas->values[i] = calloc(width, sizeof(struct PIXEL_T));
+    the_canvas.values[i] = calloc(width, sizeof(struct PIXEL_T));
     for(int j = 0; j < width; j++)
-      the_canvas->values[i][j] = (pixel){r, g, b};
+      the_canvas.values[i][j] = (pixel){r, g, b};
   }
   return the_canvas;
 }
@@ -35,10 +35,10 @@ canvas init_canvas(int height, int width, int r, int g, int b) {
  */
 void debug_canvas(canvas the_canvas) {
   printf("[CANVAS]\n");
-  printf("Height: %d Width: %d\n", the_canvas->height, the_canvas->width);
-  for(int i = 0; i < the_canvas->height; i++)
-    for(int j = 0; j < the_canvas->width; j++)
-      debug_pixel(the_canvas->values[i][j]);
+  printf("Height: %d Width: %d\n", the_canvas.height, the_canvas.width);
+  for(int i = 0; i < the_canvas.height; i++)
+    for(int j = 0; j < the_canvas.width; j++)
+      debug_pixel(the_canvas.values[i][j]);
 }
 
 /**
@@ -50,11 +50,11 @@ void debug_canvas(canvas the_canvas) {
 void write_canvas_ppm(canvas the_canvas, char * file_name) {
   FILE * fp = fopen(file_name, "w");
   fprintf(fp, "%s\n", PPM_HEADER);
-  fprintf(fp, "%d %d\n", the_canvas->width, the_canvas->height);
+  fprintf(fp, "%d %d\n", the_canvas.width, the_canvas.height);
   fprintf(fp, "%d\n", MAX_COL);
-  for(int i = 0; i < the_canvas->height; i++)
-    for(int j = 0; j < the_canvas->width; j++)
-      ppm_print(the_canvas->values[i][j], fp);
+  for(int i = 0; i < the_canvas.height; i++)
+    for(int j = 0; j < the_canvas.width; j++)
+      ppm_print(the_canvas.values[i][j], fp);
   fclose(fp);
 }
 
@@ -64,16 +64,16 @@ void write_canvas_png(canvas the_canvas, char * file_name) {
       NULL, NULL);
   png_infop info_ptr = png_create_info_struct(png_ptr);
   png_init_io(png_ptr, fp);
-  png_set_IHDR(png_ptr, info_ptr, the_canvas->width, the_canvas->height, 8,
+  png_set_IHDR(png_ptr, info_ptr, the_canvas.width, the_canvas.height, 8,
       PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
       PNG_FILTER_TYPE_DEFAULT);
   png_write_info(png_ptr, info_ptr);
-  for (int i = 0; i < the_canvas->height; i++) {
-    png_bytep row = calloc(the_canvas->width * 3, sizeof(png_byte));
-    for(int j = 0; j < the_canvas->width; j++) {
-      row[3*j + 0] = (png_byte) the_canvas->values[i][j].r;
-      row[3*j + 1] = (png_byte) the_canvas->values[i][j].g;
-      row[3*j + 2] = (png_byte) the_canvas->values[i][j].b;
+  for (int i = 0; i < the_canvas.height; i++) {
+    png_bytep row = calloc(the_canvas.width * 3, sizeof(png_byte));
+    for(int j = 0; j < the_canvas.width; j++) {
+      row[3*j + 0] = (png_byte) the_canvas.values[i][j].r;
+      row[3*j + 1] = (png_byte) the_canvas.values[i][j].g;
+      row[3*j + 2] = (png_byte) the_canvas.values[i][j].b;
     }
     png_write_row(png_ptr, row);
     free(row);
@@ -91,14 +91,11 @@ void write_canvas_png(canvas the_canvas, char * file_name) {
  * @return       N/a
  */
 void free_canvas(canvas the_canvas) {
-  if(the_canvas) {
-    if(the_canvas->values) {
-      for(int i = 0; i < the_canvas->height; i++) {
-        if(the_canvas->values[i])
-          free(the_canvas->values[i]);
-      }
-      free(the_canvas->values);
+  if(the_canvas.values) {
+    for(int i = 0; i < the_canvas.height; i++) {
+      if(the_canvas.values[i])
+        free(the_canvas.values[i]);
     }
-    free(the_canvas);
+    free(the_canvas.values);
   }
 }

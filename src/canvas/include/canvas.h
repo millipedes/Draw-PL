@@ -25,7 +25,7 @@ typedef struct CANVAS_T {
   pixel ** values;
   int height;
   int width;
-} * canvas;
+} canvas;
 
 canvas init_canvas(int height, int width, int r, int g, int b);
 void debug_canvas(canvas the_canvas);

@@ -14,6 +14,37 @@
 //   st = populate_symbol_table(head, st);
 // }
 
+result execute_canvas(ast head, result value) {
+  if(head->category == IN_CANVAS_PARAMETERS) {
+    value.result_type = NCL_CANVAS;
+    for(int i = 0; i < head->no_children; i++) {
+      switch(head->children[i]->category) {
+        case IN_WIDTH_DECLARATION:
+          value.result.the_canvas.width =
+            atoi(head->children[i]->children[0]->leaf->literal);
+          return value;
+        case IN_HEIGHT_DECLARATION:
+          value.result.the_canvas.height =
+            atoi(head->children[i]->children[0]->leaf->literal);
+          return value;
+        case IN_COLOR_DECLARATION:
+          value.result.the_color = (pixel){
+            atoi(head->children[i]->children[0]->leaf->literal),
+            atoi(head->children[i]->children[1]->leaf->literal),
+            atoi(head->children[i]->children[2]->leaf->literal),
+          };
+          return value;
+        case IN_CANVAS_PARAMETERS:
+          break;
+        case STRING:
+          break;
+        default:
+          break;
+      }
+    }
+  }
+}
+
 result execute_expression(ast head, result value) {
   if(head) {
     if(!head->leaf) {

@@ -23,6 +23,7 @@ typedef struct RESULT_T {
 } result;
 
 // void execute(ast head);
+result execute_canvas(ast head, result value);
 result execute_expression(ast head, result the_result);
 
 #endif

@@ -33,9 +33,9 @@ canvas write_point_to_canvas(canvas the_canvas, point the_point) {
       return scaline_circle_algorithm(the_canvas, the_point);
     case POINT_STAR:
       fprintf(stderr, "Star point style needs to be implemented\n");
-      return NULL;
+      return (canvas){0};
   }
-  return NULL;
+  return (canvas){0};
 }
 
 /**
@@ -63,7 +63,7 @@ canvas scaline_circle_algorithm(canvas the_canvas, point the_point) {
     right_x = (right_x > max_x) ? max_x : right_x;
 
     for(int j = left_x; j <= right_x; j++) {
-      the_canvas->values[i][j] = the_point.color;
+      the_canvas.values[i][j] = the_point.color;
     }
   }
   return the_canvas;

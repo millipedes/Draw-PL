@@ -13,6 +13,7 @@ int execute_expression_test(void) {
   head->children[2] = add_child(head->children[2], init_ast(init_token(DOUBLE, "3.1", 0), DOUBLE));
   result the_result = execute_expression(head, (result){0});
   printf("[%s]: %f\n", ncl_type_to_string(the_result.result_type), the_result.result.the_double);
+  free_ast(head);
   // yy_delete_buffer(buffer_value);
   // yylex_destroy();
   return 1;

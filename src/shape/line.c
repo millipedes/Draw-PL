@@ -35,9 +35,9 @@ canvas write_line_to_canvas(canvas the_canvas, line the_line) {
       return bresenham_line_draw(the_canvas, the_line);
     case DOTTED:
       fprintf(stderr, "Dotted line not implemented yet\n");
-      return NULL;
+      return (canvas){0};
   }
-  return NULL;
+  return (canvas){0};
 }
 
 /**
@@ -69,7 +69,7 @@ canvas bresenham_line_draw(canvas the_canvas, line the_line) {
       for(int i = 0; i < the_line.thickness; i++) {
         for(int j = -the_line.thickness / 2; j <= the_line.thickness / 2;
             j++) {
-          the_canvas->values[y + j][(int)x + i] = the_line.from.color;
+          the_canvas.values[y + j][(int)x + i] = the_line.from.color;
         }
       }
       x += x_inc;
@@ -84,7 +84,7 @@ canvas bresenham_line_draw(canvas the_canvas, line the_line) {
       for(int i = 0; i < the_line.thickness; i++) {
         for(int j = -the_line.thickness / 2; j <= the_line.thickness / 2;
             j++) {
-          the_canvas->values[y + j][(int)x + i] = the_line.from.color;
+          the_canvas.values[y + j][(int)x + i] = the_line.from.color;
         }
       }
       y += y_inc;
