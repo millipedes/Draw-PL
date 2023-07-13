@@ -11,15 +11,28 @@
 
 #include <math.h>
 #include <png.h>
+#include <string.h>
 #include "pixel.h"
 
 #define PPM_HEADER "P3"
+
+#define MAX_OUT_NAME_LEN 256
 
 #define DEFAULT_CAVNAS_HEIGHT 1000
 #define DEFAULT_CAVNAS_WIDTH  1000
 #define DEFAULT_CANVAS_R      255
 #define DEFAULT_CANVAS_G      255
 #define DEFAULT_CANVAS_B      255
+
+typedef struct CANVAS_PARAMS_T {
+  char * out_file_name;
+  pixel color;
+  int height;
+  int width;
+} canvas_params;
+
+canvas_params add_out_file_name(canvas_params the_canvas_params,
+    char * out_file_name);
 
 typedef struct CANVAS_T {
   pixel ** values;

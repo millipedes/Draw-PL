@@ -56,7 +56,7 @@ void debug_symbol_table(symbol_table st) {
          break;
        case NCL_CANVAS:
          printf("`%s`\n", st->member_names[i]);
-         debug_canvas(st->members[i].the_canvas);
+         debug_canvas_params(st->members[i].the_canvas);
          break;
        case NCL_LOOKUP:
          fprintf(stderr, "[DEBUG_SYMBOL_TABLE]: Something went wrong\nExiting"

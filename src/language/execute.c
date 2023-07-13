@@ -28,7 +28,7 @@ result execute_canvas(ast head, result value) {
             atoi(head->children[i]->children[0]->leaf->literal);
           return value;
         case IN_COLOR_DECLARATION:
-          value.result.the_color = (pixel){
+          value.result.the_canvas.color = (pixel){
             atoi(head->children[i]->children[0]->leaf->literal),
             atoi(head->children[i]->children[1]->leaf->literal),
             atoi(head->children[i]->children[2]->leaf->literal),
@@ -37,6 +37,8 @@ result execute_canvas(ast head, result value) {
         case IN_CANVAS_PARAMETERS:
           break;
         case STRING:
+          value.result.the_canvas = add_out_file_name(value.result.the_canvas,
+              head->children[i]->leaf->literal);
           break;
         default:
           break;

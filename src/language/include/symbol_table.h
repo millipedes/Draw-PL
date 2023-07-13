@@ -21,7 +21,7 @@ typedef union {
   point the_point;
   line the_line;
   ellipse the_ellipse;
-  canvas the_canvas;
+  canvas_params the_canvas;
 } symbol;
 
 typedef struct SYMBOL_TABLE_T {

@@ -9,6 +9,21 @@
  */
 #include "include/canvas.h"
 
+canvas_params add_out_file_name(canvas_params the_canvas_params,
+    char * out_file_name) {
+  size_t out_file_name_len = strnlen(out_file_name, MAX_OUT_NAME_LEN);
+  the_canvas_params.out_file_name = calloc(out_file_name_len + 1, sizeof(char));
+  strncpy(the_canvas_params.out_file_name, out_file_name, out_file_name_len);
+  return the_canvas_params;
+}
+
+void debug_canvas_params(canvas_params the_canvas_params) {
+  printf("[CANVAS_PARAMS]\n");
+  printf("out file: `%s`\n", the_canvas_params.out_file_name);
+  printf("(%d, %d)\n", the_canvas_params.height, the_canvas_params.width);
+  debug_pixel(the_canvas_params.color);
+}
+
 /**
  * This function initializes a function with dimensions heighxwidth.
  * @param      height - The height of the canvas.
