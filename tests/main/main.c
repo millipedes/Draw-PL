@@ -34,26 +34,23 @@ int main(void) {
 
 
   // Language Test Start
-  if(execute_expression_test())
-    printf("[EXECUTE_TEST]: PASSED\n");
-  else
-    printf("[EXECUTE_TEST]: FAILED\n");
+  // if(execute_expression_test())
+  //   printf("[EXECUTE_TEST]: PASSED\n");
+  // else
+  //   printf("[EXECUTE_TEST]: FAILED\n");
   // Language Test End
 
-  // yyin = fopen("../example_progs/symbol_tab.ncl", "r");
-  // if(!yyin) {
-  //   printf("unable to open input file\n");
-  //   exit(1);
-  // }
-  // yyparse();
-  // debug_ast(head, 0);
-  // print_graph(head, "test.dot");
+  yyin = fopen("../example_progs/execution_test_one.ncl", "r");
+  if(!yyin) {
+    printf("unable to open input file\n");
+    exit(1);
+  }
+  yyparse();
+  debug_ast(head, 0);
+  print_graph(head, "test.dot");
 
-  // symbol_table st = init_symbol_table();
-  // st = populate_symbol_table(head, st);
-
-  // free_ast(head);
-  // fclose(yyin);
-  // yylex_destroy();
+  free_ast(head);
+  fclose(yyin);
+  yylex_destroy();
   return 0;
 }

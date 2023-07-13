@@ -35,16 +35,21 @@ result execute_canvas(ast head, result value) {
           };
           return value;
         case IN_CANVAS_PARAMETERS:
-          break;
+          value = execute_canvas(head->children[i], value);
+          return value;
         case STRING:
           value.result.the_canvas = add_out_file_name(value.result.the_canvas,
               head->children[i]->leaf->literal);
           break;
         default:
+          fprintf(stderr, "[EXECUTE_CANVAS]: Something went terribly wrong\n");
+          exit(1);
           break;
       }
     }
   }
+  fprintf(stderr, "[EXECUTE_CANVAS]: Something went terribly wrong\n");
+  exit(1);
 }
 
 result execute_expression(ast head, result value) {
@@ -216,4 +221,6 @@ result execute_expression(ast head, result value) {
       exit(1);
     }
   }
+  fprintf(stderr, "[EXECUTE_EXPRESSION]: Something went terribly wrong\n");
+  exit(1);
 }

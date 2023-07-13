@@ -33,6 +33,7 @@ typedef struct CANVAS_PARAMS_T {
 
 canvas_params add_out_file_name(canvas_params the_canvas_params,
     char * out_file_name);
+void debug_canvas_params(canvas_params the_canvas_params);
 
 typedef struct CANVAS_T {
   pixel ** values;

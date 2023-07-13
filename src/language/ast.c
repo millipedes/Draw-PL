@@ -28,15 +28,19 @@ void debug_ast(ast head, int level) {
 }
 
 ast add_child(ast parent, ast child) {
-  parent->no_children++;
-  if(parent->children) {
-    parent->children = realloc(parent->children, parent->no_children
-        * sizeof(struct AST_T *));
+  if(child) {
+    parent->no_children++;
+    if(parent->children) {
+      parent->children = realloc(parent->children, parent->no_children
+          * sizeof(struct AST_T *));
+    } else {
+      parent->children = calloc(1, sizeof(struct AST_T *));
+    }
+    parent->children[parent->no_children - 1] = child;
+    return parent;
   } else {
-    parent->children = calloc(1, sizeof(struct AST_T *));
+    return parent;
   }
-  parent->children[parent->no_children - 1] = child;
-  return parent;
 }
 
 void free_ast(ast head) {

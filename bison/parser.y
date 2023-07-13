@@ -92,7 +92,7 @@ star_NEWLINE_stmt
     $$ = add_child($$, $1);
     $$ = add_child($$, $2);
   }
-  | NEWLINE
+  | NEWLINE { $$ = NULL; }
   ;
 
 pick_NEWLINE_stmt
@@ -100,7 +100,7 @@ pick_NEWLINE_stmt
     $$ = init_ast(NULL, IN_PICK_NEWLINE_STMT);
     $$ = add_child($$, $1);
   }
-  | NEWLINE
+  | NEWLINE { $$ = NULL; }
   ;
 
 statement
