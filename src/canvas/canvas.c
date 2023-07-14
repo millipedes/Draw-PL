@@ -24,6 +24,12 @@ void debug_canvas_params(canvas_params the_canvas_params) {
   debug_pixel(the_canvas_params.color);
 }
 
+void free_canvas_params(canvas_params the_canvas_params) {
+  if(the_canvas_params.out_file_name) {
+    free(the_canvas_params.out_file_name);
+  }
+}
+
 /**
  * This function initializes a function with dimensions heighxwidth.
  * @param      height - The height of the canvas.

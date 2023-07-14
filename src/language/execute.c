@@ -22,21 +22,21 @@ result execute_canvas(ast head, result value) {
         case IN_WIDTH_DECLARATION:
           value.result.the_canvas.width =
             atoi(head->children[i]->children[0]->leaf->literal);
-          return value;
+          break;
         case IN_HEIGHT_DECLARATION:
           value.result.the_canvas.height =
             atoi(head->children[i]->children[0]->leaf->literal);
-          return value;
+          break;
         case IN_COLOR_DECLARATION:
           value.result.the_canvas.color = (pixel){
             atoi(head->children[i]->children[0]->leaf->literal),
             atoi(head->children[i]->children[1]->leaf->literal),
             atoi(head->children[i]->children[2]->leaf->literal),
           };
-          return value;
+          break;
         case IN_CANVAS_PARAMETERS:
           value = execute_canvas(head->children[i], value);
-          return value;
+          break;
         case STRING:
           value.result.the_canvas = add_out_file_name(value.result.the_canvas,
               head->children[i]->leaf->literal);
@@ -48,8 +48,9 @@ result execute_canvas(ast head, result value) {
       }
     }
   }
-  fprintf(stderr, "[EXECUTE_CANVAS]: Something went terribly wrong\n");
-  exit(1);
+  return value;
+  // fprintf(stderr, "[EXECUTE_CANVAS]: Something went terribly wrong\n");
+  // exit(1);
 }
 
 result execute_expression(ast head, result value) {

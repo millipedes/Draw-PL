@@ -22,6 +22,7 @@
                               || (t == THICKNESS)  \
                               || (t == MAJOR_AXIS) \
                               || (t == MINOR_AXIS) \
+                              || (t == NEWLINE)    \
                               || (t == HEIGHT)     \
                               || (t == WIDTH)      \
                               || (t == ELLIPSE)    \
