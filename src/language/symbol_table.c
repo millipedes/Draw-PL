@@ -9,9 +9,36 @@ symbol_table init_symbol_table(void) {
   return st;
 }
 
-// symbol_table add_member(symbol_table st, symbol new_symbol, char * literal,
-//     ncl_type the_type) {
-// }
+symbol_table add_member(symbol_table st, symbol new_symbol, char * literal,
+    ncl_type the_type) {
+  size_t name_len = strnlen(literal, MAX_NAME);
+  st->qty_members++;
+  // Member Entry
+  if(st->members) {
+    st->members = realloc(st->members, st->qty_members * sizeof(symbol));
+  } else {
+    st->members = calloc(1, sizeof(symbol));
+  }
+  st->members[st->qty_members - 1] = new_symbol;
+  // Name Entry
+  if(st->member_names) {
+    st->member_names = realloc(st->member_names, st->qty_members
+        * sizeof(symbol));
+  } else {
+    st->member_names = calloc(1, sizeof(symbol));
+  }
+  st->member_names[st->qty_members - 1] = calloc(name_len + 1, sizeof(char));
+  strncpy(st->member_names[st->qty_members - 1], literal, name_len);
+  // Type Entry
+  if(st->member_types) {
+    st->member_types = realloc(st->member_types, st->qty_members
+        * sizeof(symbol));
+  } else {
+    st->member_types = calloc(1, sizeof(symbol));
+  }
+  st->member_types[st->qty_members - 1] = the_type;
+  return st;
+}
 
 void debug_symbol_table(symbol_table st) {
   printf("[SYMBOL_TABLE]\n");
@@ -68,8 +95,22 @@ void debug_symbol_table(symbol_table st) {
 
 void free_symbol_table(symbol_table st) {
   if(st) {
-    if(st->members)
+    if(st->member_names) {
+      for(int i = 0; i < st->qty_members; i++) {
+        if(st->member_names[i]) {
+          free(st->member_names[i]);
+        }
+      }
+      free(st->member_names);
+    }
+    if(st->members) {
+      for(int i = 0; i < st->qty_members; i++) {
+        if(st->member_types[i] == NCL_CANVAS) {
+          free_canvas_params(st->members[i].the_canvas);
+        }
+      }
       free(st->members);
+    }
     if(st->member_types)
       free(st->member_types);
     free(st);

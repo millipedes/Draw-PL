@@ -32,6 +32,7 @@ int main(void) {
     exit(1);
   }
   yyparse();
+  execute(head, st);
   // print_graph(head, "test.dot");
   free_symbol_table(st);
   free_ast(head);

@@ -30,7 +30,7 @@ typedef struct RESULT_T {
 } result;
 
 void execute(ast head, symbol_table st);
-result execute_canvas(ast head, result value);
+result execute_canvas_declaration(ast head, result value);
 result execute_expression(ast head, result the_result);
 
 #endif

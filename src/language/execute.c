@@ -12,16 +12,29 @@
 void execute(ast head, symbol_table st) {
   switch(head->category) {
     case IN_CANVAS_DECLARATION:
+      result canvas_result = execute_canvas_declaration(head->children[0],
+          (result){0});
+      st = add_member(st, canvas_result.result, "CANVAS",
+          canvas_result.result_type);
+      execute(head->children[1], st);
       break;
     case IN_STAR_NEWLINE_STMT:
+    case IN_PICK_NEWLINE_STMT:
+      execute(head->children[0], st);
+      break;
+    case IN_EXPRESSION_ASSIGNMENT:
+      result expression_result = execute_expression(head->children[2],
+          (result){0});
+      st = add_member(st, expression_result.result,
+          head->children[0]->leaf->literal, expression_result.result_type);
       break;
     default:
       fprintf(stderr, "[EXECUTE]: Something went terribly worng\n");
   }
-
+  debug_symbol_table(st);
 }
 
-result execute_canvas(ast head, result value) {
+result execute_canvas_declaration(ast head, result value) {
   if(head->category == IN_CANVAS_PARAMETERS) {
     value.result_type = NCL_CANVAS;
     for(int i = 0; i < head->no_children; i++) {
@@ -42,14 +55,15 @@ result execute_canvas(ast head, result value) {
           };
           break;
         case IN_CANVAS_PARAMETERS:
-          value = execute_canvas(head->children[i], value);
+          value = execute_canvas_declaration(head->children[i], value);
           break;
         case STRING:
           value.result.the_canvas = add_out_file_name(value.result.the_canvas,
               head->children[i]->leaf->literal);
           break;
         default:
-          fprintf(stderr, "[EXECUTE_CANVAS]: Something went terribly wrong\n");
+          fprintf(stderr, "[EXECUTE_CANVAS_DECLARATION]: Something went "
+              "terribly wrong\n");
           exit(1);
           break;
       }
