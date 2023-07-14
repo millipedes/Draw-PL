@@ -9,10 +9,17 @@
  */
 #include "include/execute.h"
 
-// void execute(ast head) {
-//   symbol_table st = init_symbol_table();
-//   st = populate_symbol_table(head, st);
-// }
+void execute(ast head, symbol_table st) {
+  switch(head->category) {
+    case IN_CANVAS_DECLARATION:
+      break;
+    case IN_STAR_NEWLINE_STMT:
+      break;
+    default:
+      fprintf(stderr, "[EXECUTE]: Something went terribly worng\n");
+  }
+
+}
 
 result execute_canvas(ast head, result value) {
   if(head->category == IN_CANVAS_PARAMETERS) {
@@ -49,8 +56,6 @@ result execute_canvas(ast head, result value) {
     }
   }
   return value;
-  // fprintf(stderr, "[EXECUTE_CANVAS]: Something went terribly wrong\n");
-  // exit(1);
 }
 
 result execute_expression(ast head, result value) {

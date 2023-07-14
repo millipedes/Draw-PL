@@ -3,14 +3,6 @@
 #include "shape/rectangle_test.h"
 #include "shape/ellipse_test.h"
 #include "language/execute_test.h"
-#include "language/include/token.h"
-#include "parser.tab.h"
-#include "language/include/dot_gen.h"
-#include "language/include/symbol_table.h"
-
-extern FILE * yyin;
-extern int yylex_destroy();
-extern ast head;
 
 int main(void) {
   // Shape Test Start
@@ -33,6 +25,19 @@ int main(void) {
   // Shape Test End
 
 
+  symbol_table st = init_symbol_table();
+  yyin = fopen("../example_progs/execution_test_one.ncl", "r");
+  if(!yyin) {
+    printf("unable to open input file\n");
+    exit(1);
+  }
+  yyparse();
+  // print_graph(head, "test.dot");
+  free_symbol_table(st);
+  free_ast(head);
+  fclose(yyin);
+  yylex_destroy();
+
   // Language Test Start
   // if(execute_expression_test())
   //   printf("[EXECUTE_TEST]: PASSED\n");
@@ -40,17 +45,5 @@ int main(void) {
   //   printf("[EXECUTE_TEST]: FAILED\n");
   // Language Test End
 
-  yyin = fopen("../example_progs/execution_test_one.ncl", "r");
-  if(!yyin) {
-    printf("unable to open input file\n");
-    exit(1);
-  }
-  yyparse();
-  debug_ast(head, 0);
-  print_graph(head, "test.dot");
-
-  free_ast(head);
-  fclose(yyin);
-  yylex_destroy();
   return 0;
 }

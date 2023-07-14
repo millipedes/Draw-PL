@@ -1,7 +1,10 @@
 #ifndef EXECUTE_H
 #define EXECUTE_H
 
-#include "symbol_table.h"
+#include "language/include/token.h"
+#include "parser.tab.h"
+#include "language/include/dot_gen.h"
+#include "language/include/symbol_table.h"
 
 // typedef union {
 //   char * the_string;
@@ -17,12 +20,16 @@
 //   canvas the_canvas;
 // } symbol;
 
+extern FILE * yyin;
+extern int yylex_destroy();
+extern ast head;
+
 typedef struct RESULT_T {
   symbol result;
   ncl_type result_type;
 } result;
 
-// void execute(ast head);
+void execute(ast head, symbol_table st);
 result execute_canvas(ast head, result value);
 result execute_expression(ast head, result the_result);
 
