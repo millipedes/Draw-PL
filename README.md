@@ -36,6 +36,9 @@ make
 ```
 
 # :ledger:
+This PL uses dynamic typechecking (at runtime like python) and because of the
+way I wrote the grammar the abstract syntax tree is traverseable in pass.
+
 The grammar for No Click is as follows:
 ```
 canvas ->

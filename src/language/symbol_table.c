@@ -75,7 +75,7 @@ void debug_symbol_table(symbol_table st) {
          break;
        case NCL_LINE:
          printf("`%s`\n", st->member_names[i]);
-         debug_point(st->members[i].the_point);
+         debug_line(st->members[i].the_line);
          break;
        case NCL_ELLIPSE:
          printf("`%s`\n", st->member_names[i]);

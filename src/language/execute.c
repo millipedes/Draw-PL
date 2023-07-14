@@ -20,7 +20,8 @@ void execute(ast head, symbol_table st) {
       break;
     case IN_STAR_NEWLINE_STMT:
     case IN_PICK_NEWLINE_STMT:
-      execute(head->children[0], st);
+      for(int i = 0; i < head->no_children; i++)
+        execute(head->children[i], st);
       break;
     case IN_EXPRESSION_ASSIGNMENT:
       result expression_result = execute_expression(head->children[2],
@@ -28,51 +29,210 @@ void execute(ast head, symbol_table st) {
       st = add_member(st, expression_result.result,
           head->children[0]->leaf->literal, expression_result.result_type);
       break;
+    case IN_SHAPE_ASSIGNMENT:
+      result shape_result = {0};
+      switch(head->children[2]->category) {
+        case IN_RECTANGLE_DECLARATION:
+           shape_result
+             = execute_rectangle_declaration(head->children[2]->children[0],
+                 (result){0});
+          break;
+        case IN_ELLIPSE_DECLARATION:
+           shape_result
+             = execute_ellipse_declaration(head->children[2]->children[0],
+                 (result){0});
+          break;
+        case IN_POINT_DECLARATION:
+          // TODO when point has all of the valid parameters, this will need to
+          // be changed to reflect ellipse/rect like
+           shape_result = execute_point_declaration(head->children[2],
+               (result){0});
+          break;
+        case IN_COLOR_DECLARATION:
+           shape_result = execute_color_declaration(head->children[2],
+               (result){0});
+          break;
+        case IN_LINE_DECLARATION:
+           shape_result
+             = execute_line_declaration(head->children[2],
+                 (result){0});
+          break;
+        default:
+          fprintf(stderr, "[EXECUTE]: (Shape) Something went terribly worng\n");
+          exit(1);
+      }
+      st = add_member(st, shape_result.result, head->children[0]->leaf->literal,
+          shape_result.result_type);
+      break;
     default:
-      fprintf(stderr, "[EXECUTE]: Something went terribly worng\n");
+      fprintf(stderr, "[EXECUTE]: (Main) Something went terribly worng\n");
+      exit(1);
   }
-  debug_symbol_table(st);
 }
 
 result execute_canvas_declaration(ast head, result value) {
-  if(head->category == IN_CANVAS_PARAMETERS) {
-    value.result_type = NCL_CANVAS;
-    for(int i = 0; i < head->no_children; i++) {
-      switch(head->children[i]->category) {
-        case IN_WIDTH_DECLARATION:
-          value.result.the_canvas.width =
-            atoi(head->children[i]->children[0]->leaf->literal);
-          break;
-        case IN_HEIGHT_DECLARATION:
-          value.result.the_canvas.height =
-            atoi(head->children[i]->children[0]->leaf->literal);
-          break;
-        case IN_COLOR_DECLARATION:
-          value.result.the_canvas.color = (pixel){
-            atoi(head->children[i]->children[0]->leaf->literal),
-            atoi(head->children[i]->children[1]->leaf->literal),
-            atoi(head->children[i]->children[2]->leaf->literal),
-          };
-          break;
-        case IN_CANVAS_PARAMETERS:
-          value = execute_canvas_declaration(head->children[i], value);
-          break;
-        case STRING:
-          value.result.the_canvas = add_out_file_name(value.result.the_canvas,
-              head->children[i]->leaf->literal);
-          break;
-        default:
-          fprintf(stderr, "[EXECUTE_CANVAS_DECLARATION]: Something went "
-              "terribly wrong\n");
-          exit(1);
-          break;
-      }
+  value.result_type = NCL_CANVAS;
+  for(int i = 0; i < head->no_children; i++) {
+    switch(head->children[i]->category) {
+      case IN_WIDTH_DECLARATION:
+        value.result.the_canvas.width
+          = execute_expression(head->children[i]->children[0], (result){0})
+          .result.the_integer;
+        break;
+      case IN_HEIGHT_DECLARATION:
+        value.result.the_canvas.height
+          = execute_expression(head->children[i]->children[0], (result){0})
+          .result.the_integer;
+        break;
+      case IN_COLOR_DECLARATION:
+        value.result.the_canvas.color
+          = execute_color_declaration(head->children[i], (result){0})
+            .result.the_color;
+        break;
+      case IN_CANVAS_PARAMETERS:
+        value = execute_canvas_declaration(head->children[i], value);
+        break;
+      case STRING:
+        value.result.the_canvas = add_out_file_name(value.result.the_canvas,
+            head->children[i]->leaf->literal);
+        break;
+      default:
+        fprintf(stderr, "[EXECUTE_CANVAS_DECLARATION]: Something went "
+            "terribly wrong\n");
+        exit(1);
+        break;
     }
   }
   return value;
 }
 
+result execute_rectangle_declaration(ast head, result value) {
+  value.result_type = NCL_RECTANGLE;
+  for(int i = 0; i < head->no_children; i++) {
+    switch(head->children[i]->category) {
+      case IN_WIDTH_DECLARATION:
+        value.result.the_rect.width
+          = execute_expression(head->children[i]->children[0], (result){0})
+          .result.the_integer;
+        break;
+      case IN_HEIGHT_DECLARATION:
+        value.result.the_rect.height
+          = execute_expression(head->children[i]->children[0], (result){0})
+          .result.the_integer;
+        break;
+      case IN_THICKNESS_DECLARATION:
+        value.result.the_rect.thickness
+          = execute_expression(head->children[i]->children[0], (result){0})
+          .result.the_integer;
+        break;
+      case IN_COLOR_DECLARATION:
+        value.result.the_rect.color
+          = execute_color_declaration(head->children[i], (result){0})
+            .result.the_color;
+        break;
+      case IN_RECTANGLE_PARAMETERS:
+        value = execute_rectangle_declaration(head->children[i], value);
+        break;
+      case IN_POINT_DECLARATION:
+        value.result.the_rect.center
+          = execute_point_declaration(head->children[i], (result){0})
+          .result.the_point;
+        break;
+      default:
+        fprintf(stderr, "[EXECUTE_RECTANGLE_DECLARATION]: Something went "
+            "terribly wrong\n");
+        exit(1);
+        break;
+    }
+  }
+  return value;
+}
+
+result execute_ellipse_declaration(ast head, result value) {
+  value.result_type = NCL_ELLIPSE;
+  for(int i = 0; i < head->no_children; i++) {
+    switch(head->children[i]->category) {
+      case IN_MAJOR_AXIS_DECLARATION:
+        value.result.the_ellipse.major_axis
+          = execute_expression(head->children[i]->children[0], (result){0})
+          .result.the_integer;
+        break;
+      case IN_MINOR_AXIS_DECLARATION:
+        value.result.the_ellipse.minor_axis
+          = execute_expression(head->children[i]->children[0], (result){0})
+          .result.the_integer;
+        break;
+      case IN_THICKNESS_DECLARATION:
+        value.result.the_ellipse.thickness
+          = execute_expression(head->children[i]->children[0], (result){0})
+          .result.the_integer;
+        break;
+      case IN_COLOR_DECLARATION:
+        value.result.the_ellipse.color
+          = execute_color_declaration(head->children[i], (result){0})
+            .result.the_color;
+        break;
+      case IN_ELLIPSE_PARAMETERS:
+        value = execute_ellipse_declaration(head->children[i], value);
+        break;
+      case IN_POINT_DECLARATION:
+        value.result.the_rect.center
+          = execute_point_declaration(head->children[i], (result){0})
+          .result.the_point;
+        break;
+      default:
+        fprintf(stderr, "[EXECUTE_ELLIPSE_DECLARATION]: Something went "
+            "terribly wrong\n");
+        exit(1);
+        break;
+    }
+  }
+  return value;
+}
+
+result execute_color_declaration(ast head, result value) {
+  value.result_type = NCL_COLOR;
+  // TODO add double/int/name ablities here
+  value.result.the_color = (pixel){
+    execute_expression(head->children[0], (result){0}).result.the_integer,
+    execute_expression(head->children[1], (result){0}).result.the_integer,
+    execute_expression(head->children[2], (result){0}).result.the_integer,
+  };
+  return value;
+}
+
+result execute_point_declaration(ast head, result value) {
+  value.result_type = NCL_POINT;
+  // TODO add ability for lang to process all of the other point style
+  // characteristics
+  // TODO add double/int/name ablities here
+  value.result.the_point = (point){
+    execute_expression(head->children[0], (result){0}).result.the_integer,
+    execute_expression(head->children[1], (result){0}).result.the_integer,
+    0,
+    (pixel){0},
+    1
+  };
+  return value;
+}
+
+result execute_line_declaration(ast head, result value) {
+  value.result_type = NCL_LINE;
+  // TODO add ability for lang to process all of the other line style
+  // characteristics
+  // TODO add double/int/name ablities here
+  value.result.the_line = (line){
+    execute_point_declaration(head->children[0]->children[0], (result){0}).result.the_point,
+    execute_point_declaration(head->children[1]->children[0], (result){0}).result.the_point,
+    0,
+    (pixel){0},
+    1
+  };
+  return value;
+}
+
 result execute_expression(ast head, result value) {
+  // TODO implement unary minus
   if(head) {
     if(!head->leaf) {
       result the_result = {0};
@@ -81,6 +241,8 @@ result execute_expression(ast head, result value) {
           case IN_EXPRESSION:
             result left = execute_expression(head->children[0], (result){0});
             result right = execute_expression(head->children[2], (result){0});
+            // TODO for all of these, add the ability to parse name with any
+            // type that the op exists for and double/int casting
             switch(head->children[1]->leaf->category) {
               case PLUS:
                 if(left.result_type == right.result_type) {

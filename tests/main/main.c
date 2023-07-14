@@ -34,6 +34,7 @@ int main(void) {
   yyparse();
   execute(head, st);
   // print_graph(head, "test.dot");
+  debug_symbol_table(st);
   free_symbol_table(st);
   free_ast(head);
   fclose(yyin);
