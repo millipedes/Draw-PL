@@ -30,6 +30,7 @@ extern ast head;
 
 void execute(ast head, symbol_table st);
 result execute_canvas_declaration(ast head, result value, symbol_table st);
+result execute_shape_declaration(ast head, result value, symbol_table st);
 result execute_rectangle_declaration(ast head, result value, symbol_table st);
 result execute_ellipse_declaration(ast head, result value, symbol_table st);
 result execute_color_declaration(ast head, result value, symbol_table st);

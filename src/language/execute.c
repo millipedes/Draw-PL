@@ -30,37 +30,8 @@ void execute(ast head, symbol_table st) {
           head->children[0]->leaf->literal, expression_result.result_type);
       break;
     case IN_SHAPE_ASSIGNMENT:
-      result shape_result = {0};
-      switch(head->children[2]->category) {
-        case IN_RECTANGLE_DECLARATION:
-           shape_result
-             = execute_rectangle_declaration(head->children[2]->children[0],
-                 (result){0}, st);
-          break;
-        case IN_ELLIPSE_DECLARATION:
-           shape_result
-             = execute_ellipse_declaration(head->children[2]->children[0],
-                 (result){0}, st);
-          break;
-        case IN_POINT_DECLARATION:
-          // TODO when point has all of the valid parameters, this will need to
-          // be changed to reflect ellipse/rect like
-           shape_result = execute_point_declaration(head->children[2],
-               (result){0}, st);
-          break;
-        case IN_COLOR_DECLARATION:
-           shape_result = execute_color_declaration(head->children[2],
-               (result){0}, st);
-          break;
-        case IN_LINE_DECLARATION:
-           shape_result
-             = execute_line_declaration(head->children[2],
-                 (result){0}, st);
-          break;
-        default:
-          fprintf(stderr, "[EXECUTE]: (Shape) Something went terribly worng\n");
-          exit(1);
-      }
+      result shape_result = execute_shape_declaration(head->children[2],
+          (result){0}, st);
       st = add_member(st, shape_result.result, head->children[0]->leaf->literal,
           shape_result.result_type);
       break;
@@ -102,6 +73,32 @@ result execute_canvas_declaration(ast head, result value, symbol_table st) {
         exit(1);
         break;
     }
+  }
+  return value;
+}
+
+result execute_shape_declaration(ast head, result value, symbol_table st) {
+  switch(head->category) {
+    case IN_RECTANGLE_DECLARATION:
+       value = execute_rectangle_declaration(head->children[0],
+             (result){0}, st);
+      break;
+    case IN_ELLIPSE_DECLARATION:
+       value = execute_ellipse_declaration(head->children[0],
+             (result){0}, st);
+      break;
+    case IN_POINT_DECLARATION:
+       value = execute_point_declaration(head, (result){0}, st);
+      break;
+    case IN_COLOR_DECLARATION:
+       value = execute_color_declaration(head, (result){0}, st);
+      break;
+    case IN_LINE_DECLARATION:
+       value = execute_line_declaration(head, (result){0}, st);
+      break;
+    default:
+      fprintf(stderr, "[EXECUTE]: (Shape) Something went terribly worng\n");
+      exit(1);
   }
   return value;
 }
@@ -219,11 +216,33 @@ result execute_line_declaration(ast head, result value, symbol_table st) {
   // TODO add ability for lang to process all of the other line style
   // characteristics
   // Add ability to do shape stuff here
+  result to_shape = execute_shape_declaration(head->children[0]->children[0],
+      (result){0}, st);
+  result from_shape = execute_shape_declaration(head->children[1]->children[0],
+      (result){0}, st);
+  point to_point = {0};
+  point from_point = {0};
+  switch(to_shape.result_type) {
+    case NCL_POINT:
+      to_point = to_shape.result.the_point;
+      break;
+    default:
+      fprintf(stderr, "[EXECUTE_LINE_DECLARATION]: Something went terribly "
+          "wrong\nExiting\n");
+      exit(1);
+  }
+  switch(from_shape.result_type) {
+    case NCL_POINT:
+      from_point = from_shape.result.the_point;
+      break;
+    default:
+      fprintf(stderr, "[EXECUTE_LINE_DECLARATION]: Something went terribly "
+          "wrong\nExiting\n");
+      exit(1);
+  }
   value.result.the_line = (line){
-    execute_point_declaration(head->children[0]->children[0], (result){0}, st)
-      .result.the_point,
-    execute_point_declaration(head->children[1]->children[0], (result){0}, st)
-      .result.the_point,
+    to_point,
+    from_point,
     0,
     (pixel){0},
     1
@@ -233,6 +252,7 @@ result execute_line_declaration(ast head, result value, symbol_table st) {
 
 result execute_expression(ast head, result value, symbol_table st) {
   // TODO implement unary minus
+  // TODO implement array semantics
   if(head) {
     if(!head->leaf) {
       result the_result = {0};
