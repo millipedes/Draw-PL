@@ -20,6 +20,11 @@
 //   canvas the_canvas;
 // } symbol;
 
+#define IS_LEFT_UPCAST(l, r) (l.result_type == NCL_INTEGER \
+                              && r.result_type == NCL_DOUBLE)
+#define IS_RIGHT_UPCAST(l, r) (l.result_type == NCL_DOUBLE \
+                               && r.result_type == NCL_INTEGER)
+
 extern FILE * yyin;
 extern int yylex_destroy();
 extern ast head;

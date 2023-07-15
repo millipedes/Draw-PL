@@ -4,7 +4,7 @@
 extern int yylex();
 extern char * yytext;
 ast head;
-int tree_id;
+int tree_id; // This is hear to produce .dot files (graphviz for tree analysis)
 
 int yyerror(char * s);
 char * category_to_string(int category);

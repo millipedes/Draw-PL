@@ -9,6 +9,7 @@ symbol_table init_symbol_table(void) {
   return st;
 }
 
+// TODO add check for update symbol
 symbol_table add_member(symbol_table st, symbol new_symbol, char * literal,
     ncl_type the_type) {
   size_t name_len = strnlen(literal, MAX_NAME);

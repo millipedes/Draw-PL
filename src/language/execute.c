@@ -242,7 +242,7 @@ result execute_expression(ast head, result value) {
             result left = execute_expression(head->children[0], (result){0});
             result right = execute_expression(head->children[2], (result){0});
             // TODO for all of these, add the ability to parse name with any
-            // type that the op exists for and double/int casting
+            // type
             switch(head->children[1]->leaf->category) {
               case PLUS:
                 if(left.result_type == right.result_type) {
@@ -267,6 +267,16 @@ result execute_expression(ast head, result value) {
                           ncl_type_to_string(left.result_type));
                       exit(1);
                   }
+                } else if(IS_LEFT_UPCAST(left, right)) {
+                  the_result.result_type = NCL_DOUBLE;
+                  the_result.result.the_double = (double)(left.result.the_integer)
+                    + right.result.the_double;
+                  return the_result;
+                } else if(IS_RIGHT_UPCAST(left, right)) {
+                  the_result.result_type = NCL_DOUBLE;
+                  the_result.result.the_double = left.result.the_double
+                    + (double)(right.result.the_integer);
+                  return the_result;
                 }
                 break;
               case MINUS:
@@ -288,6 +298,16 @@ result execute_expression(ast head, result value) {
                           ncl_type_to_string(left.result_type));
                       exit(1);
                   }
+                } else if(IS_LEFT_UPCAST(left, right)) {
+                  the_result.result_type = NCL_DOUBLE;
+                  the_result.result.the_double = (double)(left.result.the_integer)
+                    - right.result.the_double;
+                  return the_result;
+                } else if(IS_RIGHT_UPCAST(left, right)) {
+                  the_result.result_type = NCL_DOUBLE;
+                  the_result.result.the_double = left.result.the_double
+                    - (double)(right.result.the_integer);
+                  return the_result;
                 }
                 break;
               case STAR:
@@ -309,6 +329,16 @@ result execute_expression(ast head, result value) {
                           ncl_type_to_string(left.result_type));
                       exit(1);
                   }
+                } else if(IS_LEFT_UPCAST(left, right)) {
+                  the_result.result_type = NCL_DOUBLE;
+                  the_result.result.the_double = (double)(left.result.the_integer)
+                    * right.result.the_double;
+                  return the_result;
+                } else if(IS_RIGHT_UPCAST(left, right)) {
+                  the_result.result_type = NCL_DOUBLE;
+                  the_result.result.the_double = left.result.the_double
+                    * (double)(right.result.the_integer);
+                  return the_result;
                 }
                 break;
               case SLASH:
@@ -330,6 +360,16 @@ result execute_expression(ast head, result value) {
                           ncl_type_to_string(left.result_type));
                       exit(1);
                   }
+                } else if(IS_LEFT_UPCAST(left, right)) {
+                  the_result.result_type = NCL_DOUBLE;
+                  the_result.result.the_double = (double)(left.result.the_integer)
+                    / right.result.the_double;
+                  return the_result;
+                } else if(IS_RIGHT_UPCAST(left, right)) {
+                  the_result.result_type = NCL_DOUBLE;
+                  the_result.result.the_double = left.result.the_double
+                    / (double)(right.result.the_integer);
+                  return the_result;
                 }
                 break;
               case PERCENT:
