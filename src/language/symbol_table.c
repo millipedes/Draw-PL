@@ -41,6 +41,16 @@ symbol_table add_member(symbol_table st, symbol new_symbol, char * literal,
   return st;
 }
 
+result find_symbol(symbol_table st, char * name) {
+  for(int i = 0; i < st->qty_members; i++) {
+    if(!strncmp(st->member_names[i], name, MAX_NAME)) {
+      return (result){st->members[i], st->member_types[i]};
+    }
+  }
+  fprintf(stderr, "[FIND_SYMBOL]: symbol: `%s` no declared\nExiting\n", name);
+  exit(1);
+}
+
 void debug_symbol_table(symbol_table st) {
   printf("[SYMBOL_TABLE]\n");
   for(int i = 0; i < st->qty_members; i++) {
