@@ -16,6 +16,7 @@
                               || (t == FROM)       \
                               || (t == TO)         \
                               || (t == IN)         \
+                              || (t == COMMENT)    \
                               || (t == FOR)        \
                               || (t == IF)         \
                               || (t == RANGE)      \

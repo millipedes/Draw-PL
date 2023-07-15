@@ -43,3 +43,14 @@ The grammar for No Click is as follows:
 ```
 canvas ->
 ```
+
+## TODO
+  - Update to/from to include shapes
+  - Make write
+  - Make string
+  - for loops
+  - if statements
+  - boolean logic stuff (> >= < <= == !=)
+  - array logic
+  - append
+  - north/south/east/west

@@ -106,7 +106,7 @@ pick_NEWLINE_stmt
 statement
   : shape_assignment
   | for_loop
-  | COMMENT
+  | COMMENT { $$ = NULL; }
   | expression_assignment
   | if_stmt
   ;
