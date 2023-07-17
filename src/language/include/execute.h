@@ -32,7 +32,7 @@ extern FILE * yyin;
 extern int yylex_destroy();
 extern ast head;
 
-void execute(ast head, symbol_table st);
+canvas execute(ast head, symbol_table st, canvas the_canvas);
 result execute_canvas_declaration(ast head, result value, symbol_table st);
 result execute_shape_declaration(ast head, result value, symbol_table st);
 result execute_rectangle_declaration(ast head, result value, symbol_table st);

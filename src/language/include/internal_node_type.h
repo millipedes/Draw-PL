@@ -30,6 +30,7 @@ typedef enum {
   IN_MINOR_AXIS_DECLARATION,
   IN_THICKNESS_DECLARATION,
   IN_CANVAS_PARAMETERS,
+  IN_WRITE,
 } internal_node_type;
 
 const char * internal_node_type_to_string(internal_node_type int_node_type);

@@ -2,22 +2,25 @@ canvas("test.png", height(1000), width(1000), color(0, 23, 42)) {
   # This is a comment
   y = 1.1 + 2.1
   x = 1 + 2 * 4 - 3 + y
-  rect = rectangle(                                        \
-                  height(10),                              \
-                  thickness(1 * 15),                       \
-                  width(10),                               \
-                  point(500, 500) \
+  rect = rectangle(                  \
+                  height(100),       \
+                  thickness(1 * 15), \
+                  width(100),        \
+                  point(500, 500),   \
+                  color(0, 255, 0)   \
                   )
-  ell = ellipse(         \
-    minor_axis(15 + 15), \
-    major_axis(17),      \
-    point(1, 1 + 35),    \
-    thickness(1 * 15)    \
+  ell = ellipse(     \
+    minor_axis(150), \
+    major_axis(150), \
+    point(600, 635), \
+    thickness(15),   \
+    color(255, 0, 0) \
   )
-  the_point = point(15 + 35, 35 + 35)
-  the_color = color(15 + 35, 35 + 35, 255)
-  the_line = line(                 \
-    from(rect), \
-    to(rectangle(height(10), width(10), point(450, 500)))    \
+  the_line = line( \
+    from(rect),    \
+    to(ell)        \
   )
+  write(rect)
+  write(ell)
+  write(the_line)
 }

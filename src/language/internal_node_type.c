@@ -28,6 +28,7 @@ const char * internal_node_type_to_string(internal_node_type int_node_type) {
     case IN_MINOR_AXIS_DECLARATION: return "minor axis decl";
     case IN_THICKNESS_DECLARATION:  return "thickness decl";
     case IN_CANVAS_PARAMETERS:      return "canvas params";
+    case IN_WRITE:                  return "write";
   }
   return NULL;
 }

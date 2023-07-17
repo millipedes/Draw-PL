@@ -46,7 +46,6 @@ canvas ->
 
 ## TODO
   - Update to/from to include shapes
-  - Make write
   - Make string
   - for loops
   - if statements

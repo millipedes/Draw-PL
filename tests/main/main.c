@@ -32,20 +32,13 @@ int main(void) {
     exit(1);
   }
   yyparse();
-  execute(head, st);
-  //print_graph(head, "test.dot");
-  debug_symbol_table(st);
+  canvas the_canvas = execute(head, st, (canvas){0});
+  write_canvas_png(the_canvas, "first_picture.png");
+  free_canvas(the_canvas);
   free_symbol_table(st);
   free_ast(head);
   fclose(yyin);
   yylex_destroy();
-
-  // Language Test Start
-  // if(execute_expression_test())
-  //   printf("[EXECUTE_TEST]: PASSED\n");
-  // else
-  //   printf("[EXECUTE_TEST]: FAILED\n");
-  // Language Test End
 
   return 0;
 }

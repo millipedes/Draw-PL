@@ -18,6 +18,7 @@
                               || (t == IN)         \
                               || (t == COMMENT)    \
                               || (t == FOR)        \
+                              || (t == WRITE)      \
                               || (t == IF)         \
                               || (t == RANGE)      \
                               || (t == THICKNESS)  \

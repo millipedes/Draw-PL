@@ -40,7 +40,7 @@ char * category_to_string(int category);
 %type <the_ast> rectangle_parameter rectangle_parameters height_declaration
 %type <the_ast> width_declaration major_axis_declaration minor_axis_declaration
 %type <the_ast> ellipse_parameters ellipse_parameter thickness_declartaion
-%type <the_ast> canvas_parameter canvas_parameters
+%type <the_ast> canvas_parameter canvas_parameters write_declaration
 
 %%
 
@@ -51,7 +51,6 @@ program
     head = $1;
     return ENDMARKER;
   }
-  | expression
   ;
 
 canvas_declaration
@@ -109,6 +108,7 @@ statement
   | COMMENT { $$ = NULL; }
   | expression_assignment
   | if_stmt
+  | write_declaration
   ;
 
 if_stmt
@@ -116,6 +116,13 @@ if_stmt
     $$ = init_ast(NULL, IN_IF_STMT);
     $$ = add_child($$, $3);
     $$ = add_child($$, $6);
+  }
+  ;
+
+write_declaration
+  : WRITE LPAR NAME RPAR {
+    $$ = init_ast(NULL, IN_WRITE);
+    $$ = add_child($$, $3);
   }
   ;
 
@@ -281,6 +288,7 @@ rectangle_parameter
   | height_declaration
   | width_declaration
   | thickness_declartaion
+  | NAME
   ;
 
 height_declaration

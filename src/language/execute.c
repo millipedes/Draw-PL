@@ -9,19 +9,19 @@
  */
 #include "include/execute.h"
 
-void execute(ast head, symbol_table st) {
+canvas execute(ast head, symbol_table st, canvas the_canvas) {
   switch(head->category) {
     case IN_CANVAS_DECLARATION:
       result canvas_result = execute_canvas_declaration(head->children[0],
           (result){0}, st);
       st = add_member(st, canvas_result.result, "CANVAS",
           canvas_result.result_type);
-      execute(head->children[1], st);
+      the_canvas = execute(head->children[1], st, the_canvas);
       break;
     case IN_STAR_NEWLINE_STMT:
     case IN_PICK_NEWLINE_STMT:
       for(int i = 0; i < head->no_children; i++)
-        execute(head->children[i], st);
+        the_canvas = execute(head->children[i], st, the_canvas);
       break;
     case IN_EXPRESSION_ASSIGNMENT:
       result expression_result = execute_expression(head->children[2],
@@ -35,10 +35,40 @@ void execute(ast head, symbol_table st) {
       st = add_member(st, shape_result.result, head->children[0]->leaf->literal,
           shape_result.result_type);
       break;
+    case IN_WRITE:
+      result write_result = find_symbol(st, head->children[0]->leaf->literal);
+      if(!the_canvas.values) {
+        result canvas_params_result = find_symbol(st, "CANVAS");
+        the_canvas = init_canvas(canvas_params_result.result.the_canvas.height,
+                                 canvas_params_result.result.the_canvas.width,
+                                 canvas_params_result.result.the_canvas.color.r,
+                                 canvas_params_result.result.the_canvas.color.g,
+                                 canvas_params_result.result.the_canvas.color.b);
+      }
+      switch(write_result.result_type) {
+        case NCL_RECTANGLE:
+          draw_rectangle(the_canvas, write_result.result.the_rect);
+          break;
+        case NCL_POINT:
+          write_point_to_canvas(the_canvas, write_result.result.the_point);
+          break;
+        case NCL_ELLIPSE:
+          draw_ellipse(the_canvas, write_result.result.the_ellipse);
+          break;
+        case NCL_LINE:
+          write_line_to_canvas(the_canvas, write_result.result.the_line);
+          break;
+        default:
+          fprintf(stderr, "[EXECUTE]: Something went wrong writing to canvas\n"
+              "Exiting\n");
+          exit(1);
+      }
+      break;
     default:
       fprintf(stderr, "[EXECUTE]: (Main) Something went terribly worng\n");
       exit(1);
   }
+  return the_canvas;
 }
 
 result execute_canvas_declaration(ast head, result value, symbol_table st) {
@@ -339,6 +369,42 @@ result execute_line_declaration(ast head, result value, symbol_table st) {
           };
           break;
         case NCL_ELLIPSE:
+          if(IS_ABOVE(to_shape.result.the_rect.center,
+                from_shape.result.the_ellipse.center)) {
+            y_offset_to -= (to_shape.result.the_rect.height / 2.0);
+            y_offset_from += (from_shape.result.the_ellipse.minor_axis / 2.0);
+          } else if(!IS_ABOVE(to_shape.result.the_rect.center,
+                from_shape.result.the_ellipse.center)
+              && !IS_EQUAL_Y(to_shape.result.the_rect.center,
+                from_shape.result.the_ellipse.center)) {
+            y_offset_to += (to_shape.result.the_rect.height / 2.0);
+            y_offset_from -= (from_shape.result.the_ellipse.minor_axis / 2.0);
+          }
+          if(IS_RIGHT(to_shape.result.the_rect.center,
+                from_shape.result.the_ellipse.center)) {
+            x_offset_to -= (to_shape.result.the_rect.width / 2.0);
+            x_offset_from += (from_shape.result.the_ellipse.major_axis / 2.0);
+          } else if(!IS_RIGHT(to_shape.result.the_rect.center,
+                from_shape.result.the_ellipse.center)
+              && !IS_EQUAL_X(to_shape.result.the_rect.center,
+                from_shape.result.the_ellipse.center)) {
+            x_offset_to += (to_shape.result.the_rect.width / 2.0);
+            x_offset_from -= (from_shape.result.the_ellipse.major_axis / 2.0);
+          }
+          to_point = (point){
+            to_shape.result.the_rect.center.x + x_offset_to,
+            to_shape.result.the_rect.center.y + y_offset_to,
+            0,
+            (pixel){0},
+            1
+          };
+          from_point = (point){
+            from_shape.result.the_ellipse.center.x + x_offset_from,
+            from_shape.result.the_ellipse.center.y + y_offset_from,
+            0,
+            (pixel){0},
+            1
+          };
           break;
         case NCL_POINT:
           break;
