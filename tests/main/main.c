@@ -26,7 +26,7 @@ int main(void) {
 
 
   symbol_table st = init_symbol_table();
-  yyin = fopen("../example_progs/execution_test_one.ncl", "r");
+  yyin = fopen("../example_progs/line_test.ncl", "r");
   if(!yyin) {
     printf("unable to open input file\n");
     exit(1);

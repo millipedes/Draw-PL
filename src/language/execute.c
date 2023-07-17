@@ -333,14 +333,14 @@ result execute_line_declaration(ast head, result value, symbol_table st) {
         case NCL_RECTANGLE:
           if(IS_ABOVE(to_shape.result.the_rect.center,
                 from_shape.result.the_rect.center)) {
-            y_offset_to -= (to_shape.result.the_rect.height / 2.0);
-            y_offset_from += (from_shape.result.the_rect.height / 2.0);
+            y_offset_to += ((to_shape.result.the_rect.height + to_shape.result.the_rect.thickness) / 2.0);
+            y_offset_from -= (from_shape.result.the_rect.height / 2.0);
           } else if(!IS_ABOVE(to_shape.result.the_rect.center,
                 from_shape.result.the_rect.center)
               && !IS_EQUAL_Y(to_shape.result.the_rect.center,
                 from_shape.result.the_rect.center)) {
-            y_offset_to += (to_shape.result.the_rect.height / 2.0);
-            y_offset_from -= (from_shape.result.the_rect.height / 2.0);
+            y_offset_to -= (to_shape.result.the_rect.height / 2.0);
+            y_offset_from += (from_shape.result.the_rect.height / 2.0);
           }
           if(IS_RIGHT(to_shape.result.the_rect.center,
                 from_shape.result.the_rect.center)) {
