@@ -256,58 +256,101 @@ result execute_line_declaration(ast head, result value, symbol_table st) {
   value.result_type = NCL_LINE;
   // TODO add ability for lang to process all of the other line style
   // characteristics
-  //result to_shape = {0};
-  //if(head->children[0]->children[0]->leaf) {
-  //  if(head->children[0]->children[0]->leaf->category == NAME) {
-  //    to_shape = find_symbol(st,
-  //        head->children[0]->children[0]->leaf->literal);
-  //  } else {
-  //    fprintf(stderr, "[EXECUTE_LINE_DECLARATION]: Something went terribly "
-  //        "wrong\nExiting\n");
-  //    exit(1);
-  //  }
-  //} else {
-    result to_shape = execute_shape_declaration(head->children[0]->children[0],
-        (result){0}, st);
-  //}
-
-  //result from_shape = {0};
-  //if(head->children[1]->children[0]->leaf) {
-  //  if(head->children[1]->children[0]->leaf->category == NAME) {
-  //    from_shape = find_symbol(st,
-  //        head->children[0]->children[0]->leaf->literal);
-  //  } else {
-  //    fprintf(stderr, "[EXECUTE_LINE_DECLARATION]: Something went terribly "
-  //        "wrong\nExiting\n");
-  //    exit(1);
-  //  }
-  //} else {
-    result from_shape = execute_shape_declaration(head->children[1]->children[0],
-        (result){0}, st);
-  //}
-  point to_point = {0};
-  point from_point = {0};
-  ///**
-  // * This scheme is also followed for y.
-  // * 0 -> to.x == from.x
-  // * 1 -> to.x >  from.x
-  // * 2 -> to.x <  from.x
-  // */
-  //switch(from_shape.
-  //int x_relative = GET_RELATIVE_X;
-  //int y_relative = 0;
-  switch(to_shape.result_type) {
-    case NCL_POINT:
-      to_point = to_shape.result.the_point;
-      break;
-    default:
+  result to_shape = {0};
+  if(head->children[0]->children[0]->leaf) {
+    if(head->children[0]->children[0]->leaf->category == NAME) {
+      to_shape = find_symbol(st,
+          head->children[0]->children[0]->leaf->literal);
+    } else {
       fprintf(stderr, "[EXECUTE_LINE_DECLARATION]: Something went terribly "
           "wrong\nExiting\n");
       exit(1);
+    }
+  } else {
+    to_shape = execute_shape_declaration(head->children[0]->children[0],
+        (result){0}, st);
   }
-  switch(from_shape.result_type) {
+
+  result from_shape = {0};
+  if(head->children[1]->children[0]->leaf) {
+    if(head->children[1]->children[0]->leaf->category == NAME) {
+      from_shape = find_symbol(st,
+          head->children[1]->children[0]->leaf->literal);
+    } else {
+      fprintf(stderr, "[EXECUTE_LINE_DECLARATION]: Something went terribly "
+          "wrong\nExiting\n");
+      exit(1);
+    }
+  } else {
+    from_shape = execute_shape_declaration(head->children[1]->children[0],
+        (result){0}, st);
+  }
+  point to_point = {0};
+  point from_point = {0};
+  if(to_shape.result_type == NCL_POINT) {
+    to_point = to_shape.result.the_point;
+  }
+  if(from_shape.result_type == NCL_POINT) {
+    from_point = from_shape.result.the_point;
+  }
+  int x_offset_to = 0;
+  int x_offset_from = 0;
+  int y_offset_to = 0;
+  int y_offset_from = 0;
+  switch(to_shape.result_type) {
+    case NCL_RECTANGLE:
+      switch(from_shape.result_type) {
+        case NCL_RECTANGLE:
+          if(IS_ABOVE(to_shape.result.the_rect.center,
+                from_shape.result.the_rect.center)) {
+            y_offset_to -= (to_shape.result.the_rect.height / 2.0);
+            y_offset_from += (from_shape.result.the_rect.height / 2.0);
+          } else if(!IS_ABOVE(to_shape.result.the_rect.center,
+                from_shape.result.the_rect.center)
+              && !IS_EQUAL_Y(to_shape.result.the_rect.center,
+                from_shape.result.the_rect.center)) {
+            y_offset_to += (to_shape.result.the_rect.height / 2.0);
+            y_offset_from -= (from_shape.result.the_rect.height / 2.0);
+          }
+          if(IS_RIGHT(to_shape.result.the_rect.center,
+                from_shape.result.the_rect.center)) {
+            x_offset_to -= (to_shape.result.the_rect.width / 2.0);
+            x_offset_from += (from_shape.result.the_rect.width / 2.0);
+          } else if(!IS_RIGHT(to_shape.result.the_rect.center,
+                from_shape.result.the_rect.center)
+              && !IS_EQUAL_X(to_shape.result.the_rect.center,
+                from_shape.result.the_rect.center)) {
+            x_offset_to += (to_shape.result.the_rect.width / 2.0);
+            x_offset_from -= (from_shape.result.the_rect.width / 2.0);
+          }
+          to_point = (point){
+            to_shape.result.the_rect.center.x + x_offset_to,
+            to_shape.result.the_rect.center.y + y_offset_to,
+            0,
+            (pixel){0},
+            1
+          };
+          from_point = (point){
+            from_shape.result.the_rect.center.x + x_offset_from,
+            from_shape.result.the_rect.center.y + y_offset_from,
+            0,
+            (pixel){0},
+            1
+          };
+          break;
+        case NCL_ELLIPSE:
+          break;
+        case NCL_POINT:
+          break;
+        default:
+          fprintf(stderr, "[EXECUTE_LINE_DECLARATION]: Something went terribly "
+              "wrong\nExiting\n");
+          exit(1);
+      }
+      break;
+    case NCL_ELLIPSE:
+      break;
     case NCL_POINT:
-      from_point = from_shape.result.the_point;
       break;
     default:
       fprintf(stderr, "[EXECUTE_LINE_DECLARATION]: Something went terribly "
@@ -363,12 +406,10 @@ result execute_expression(ast head, result value, symbol_table st) {
                   }
                 } else if(IS_LEFT_UPCAST(left, right)) {
                   the_result.result_type = NCL_DOUBLE;
-                  printf("%f\n\n", (double)(left.result.the_integer));
                   the_result.result.the_double =
                     (double)(left.result.the_integer) + right.result.the_double;
                   return the_result;
                 } else if(IS_RIGHT_UPCAST(left, right)) {
-                  printf("%f, %f\n\n", left.result.the_double, (double)(right.result.the_integer));
                   the_result.result_type = NCL_DOUBLE;
                   the_result.result.the_double = left.result.the_double
                     + (double)(right.result.the_integer);

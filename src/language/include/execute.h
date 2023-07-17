@@ -23,8 +23,10 @@
                               && r.result_type == NCL_DOUBLE)
 #define IS_RIGHT_UPCAST(l, r) (l.result_type == NCL_DOUBLE \
                                && r.result_type == NCL_INTEGER)
-#define GET_RELATIVE_X(p1, p2) (p1.x == p2.x ? 0 : (p1.x > p2.x ? 1 : 2))
-#define GET_RELATIVE_Y(p1, p2) (p1.y == p2.y ? 0 : (p1.y > p2.y ? 1 : 2))
+#define IS_ABOVE(p1, p2) (p1.y < p2.y)
+#define IS_RIGHT(p1, p2) (p1.x > p2.x)
+#define IS_EQUAL_X(p1, p2) (p1.x == p2.x)
+#define IS_EQUAL_Y(p1, p2) (p1.y == p2.y)
 
 extern FILE * yyin;
 extern int yylex_destroy();

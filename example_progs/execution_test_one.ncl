@@ -6,7 +6,7 @@ canvas("test.png", height(1000), width(1000), color(0, 23, 42)) {
                   height(10),                              \
                   thickness(1 * 15),                       \
                   width(10),                               \
-                  point(30 + 1 + 2 * 4 - 3, 1 + 2 * 4 - 3) \
+                  point(500, 500) \
                   )
   ell = ellipse(         \
     minor_axis(15 + 15), \
@@ -17,7 +17,7 @@ canvas("test.png", height(1000), width(1000), color(0, 23, 42)) {
   the_point = point(15 + 35, 35 + 35)
   the_color = color(15 + 35, 35 + 35, 255)
   the_line = line(                 \
-    from(point(19 + 35, 19 + 35)), \
-    to(point(19 + 35, 1.9 + 35))    \
+    from(rect), \
+    to(rectangle(height(10), width(10), point(450, 500)))    \
   )
 }
