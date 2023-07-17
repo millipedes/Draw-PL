@@ -201,13 +201,54 @@ result execute_point_declaration(ast head, result value, symbol_table st) {
   value.result_type = NCL_POINT;
   // TODO add ability for lang to process all of the other point style
   // characteristics
-  value.result.the_point = (point){
-    execute_expression(head->children[0], (result){0}, st).result.the_integer,
-    execute_expression(head->children[1], (result){0}, st).result.the_integer,
-    0,
-    (pixel){0},
-    1
-  };
+  result x = execute_expression(head->children[0], (result){0}, st);
+  result y = execute_expression(head->children[1], (result){0}, st);
+  if(x.result_type == y.result_type) {
+    switch(x.result_type) {
+      case NCL_INTEGER:
+        value.result.the_point = (point){
+          x.result.the_integer,
+          y.result.the_integer,
+          0,
+          (pixel){0},
+          1
+        };
+        break;
+      case NCL_DOUBLE:
+        value.result.the_point = (point){
+          x.result.the_double,
+          y.result.the_double,
+          0,
+          (pixel){0},
+          1
+        };
+        break;
+      default:
+        fprintf(stderr, "[EXECUTE_POINT_DECLARTAION]: Something went terribly"
+            " wrong\nExiting\n");
+        exit(1);
+    }
+  } else if(IS_LEFT_UPCAST(x, y)) {
+    value.result.the_point = (point){
+      (double)(x.result.the_integer),
+      y.result.the_double,
+      0,
+      (pixel){0},
+      1
+    };
+  } else if(IS_RIGHT_UPCAST(x, y)) {
+    value.result.the_point = (point){
+      x.result.the_double,
+      (double)(y.result.the_integer),
+      0,
+      (pixel){0},
+      1
+    };
+  } else {
+    fprintf(stderr, "[EXECUTE_POINT_DECLARTAION]: Something went terribly wrong"
+        "\nExiting\n");
+    exit(1);
+  }
   return value;
 }
 
@@ -215,13 +256,46 @@ result execute_line_declaration(ast head, result value, symbol_table st) {
   value.result_type = NCL_LINE;
   // TODO add ability for lang to process all of the other line style
   // characteristics
-  // Add ability to do shape stuff here
-  result to_shape = execute_shape_declaration(head->children[0]->children[0],
-      (result){0}, st);
-  result from_shape = execute_shape_declaration(head->children[1]->children[0],
-      (result){0}, st);
+  //result to_shape = {0};
+  //if(head->children[0]->children[0]->leaf) {
+  //  if(head->children[0]->children[0]->leaf->category == NAME) {
+  //    to_shape = find_symbol(st,
+  //        head->children[0]->children[0]->leaf->literal);
+  //  } else {
+  //    fprintf(stderr, "[EXECUTE_LINE_DECLARATION]: Something went terribly "
+  //        "wrong\nExiting\n");
+  //    exit(1);
+  //  }
+  //} else {
+    result to_shape = execute_shape_declaration(head->children[0]->children[0],
+        (result){0}, st);
+  //}
+
+  //result from_shape = {0};
+  //if(head->children[1]->children[0]->leaf) {
+  //  if(head->children[1]->children[0]->leaf->category == NAME) {
+  //    from_shape = find_symbol(st,
+  //        head->children[0]->children[0]->leaf->literal);
+  //  } else {
+  //    fprintf(stderr, "[EXECUTE_LINE_DECLARATION]: Something went terribly "
+  //        "wrong\nExiting\n");
+  //    exit(1);
+  //  }
+  //} else {
+    result from_shape = execute_shape_declaration(head->children[1]->children[0],
+        (result){0}, st);
+  //}
   point to_point = {0};
   point from_point = {0};
+  ///**
+  // * This scheme is also followed for y.
+  // * 0 -> to.x == from.x
+  // * 1 -> to.x >  from.x
+  // * 2 -> to.x <  from.x
+  // */
+  //switch(from_shape.
+  //int x_relative = GET_RELATIVE_X;
+  //int y_relative = 0;
   switch(to_shape.result_type) {
     case NCL_POINT:
       to_point = to_shape.result.the_point;
@@ -289,10 +363,12 @@ result execute_expression(ast head, result value, symbol_table st) {
                   }
                 } else if(IS_LEFT_UPCAST(left, right)) {
                   the_result.result_type = NCL_DOUBLE;
+                  printf("%f\n\n", (double)(left.result.the_integer));
                   the_result.result.the_double =
                     (double)(left.result.the_integer) + right.result.the_double;
                   return the_result;
                 } else if(IS_RIGHT_UPCAST(left, right)) {
+                  printf("%f, %f\n\n", left.result.the_double, (double)(right.result.the_integer));
                   the_result.result_type = NCL_DOUBLE;
                   the_result.result.the_double = left.result.the_double
                     + (double)(right.result.the_integer);

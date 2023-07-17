@@ -6,7 +6,7 @@ might be the model building language for you.
 
 # :factory: Inputs and Outputs
 The input to this program should be text files which are representative of a
-some 2D model (which I have deemed `.nc` files).  This can be anything which you
+some 2D model (which I have deemed `.ncl` files).  This can be anything which you
 can draw on a 2D surface using ellipses, rectangles, points, and lines.
 Additionally there is full text support. With these two things in mind, at least
 what I use it for is making graphical representations of complex data
@@ -54,3 +54,4 @@ canvas ->
   - array logic
   - append
   - north/south/east/west
+  - add NAME to all declaration types and add execution semantics
